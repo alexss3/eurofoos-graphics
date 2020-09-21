@@ -11,4 +11,9 @@ bugShowButton.addEventListener('click', function (e) {
     e.preventDefault();
     electron_1.ipcRenderer.send('bug-show');
 });
+var bugHideButton = document.getElementById('bug-hide');
+bugHideButton.addEventListener('click', function (e) {
+    e.preventDefault();
+    electron_1.ipcRenderer.send('bug-hide');
+});
 //# sourceMappingURL=renderer.js.map

@@ -30,7 +30,12 @@ var createChromaWindow = function () {
             nodeIntegration: true
         }
     });
-    // chromaWindow.setIgnoreMouseEvents(true);
+    // Hide the cursor from view, else it will
+    // appear in the chroma key
+    chromaWindow.webContents.on('dom-ready', function () {
+        var css = '* {cursor: none !important; }';
+        chromaWindow.webContents.insertCSS(css);
+    });
     var id = electron_1.powerSaveBlocker.start('prevent-display-sleep');
     chromaWindow.loadFile(path.join(__dirname, '../src/windows/chroma.html'));
     chromaWindow.on('closed', function () {
@@ -75,5 +80,8 @@ electron_1.ipcMain.on('fullscreen-chroma-window', function () {
 });
 electron_1.ipcMain.on('bug-show', function () {
     chromaWindow.webContents.send('bug-show');
+});
+electron_1.ipcMain.on('bug-hide', function () {
+    chromaWindow.webContents.send('bug-hide');
 });
 //# sourceMappingURL=index.js.map

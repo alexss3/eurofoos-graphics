@@ -34,7 +34,12 @@ const createChromaWindow = (): void => {
     },
   });
 
-  // chromaWindow.setIgnoreMouseEvents(true);
+  // Hide the cursor from view, else it will
+  // appear in the chroma key
+  chromaWindow.webContents.on('dom-ready', () => {
+    const css = '* {cursor: none !important; }';
+    chromaWindow.webContents.insertCSS(css);
+  });
 
   const id = powerSaveBlocker.start('prevent-display-sleep');
 
@@ -90,4 +95,8 @@ ipcMain.on('fullscreen-chroma-window', () => {
 
 ipcMain.on('bug-show', () => {
   chromaWindow.webContents.send('bug-show');
+});
+
+ipcMain.on('bug-hide', () => {
+  chromaWindow.webContents.send('bug-hide');
 });

@@ -14,3 +14,10 @@ bugShowButton.addEventListener('click', (e) => {
   e.preventDefault();
   ipcRenderer.send('bug-show');
 });
+
+const bugHideButton = document.getElementById('bug-hide');
+
+bugHideButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('bug-hide');
+});
