@@ -1,5 +1,22 @@
 body {
-  background-color: #0f0;
   margin: 0;
   padding: 0;
+}
+
+#chroma {
+  width: 100%;
+  height: 100vh;
+  display: block;
+  background-color: #0f0;
+}
+
+#bug {
+  display: none;
+  background: url(../../images/EurofoosLive-white-transparent.png) no-repeat;
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  width: 250px;
+  height: 50px;
+  background-size: contain;
 }

@@ -25,14 +25,26 @@ var createChromaWindow = function () {
     chromaWindow = new electron_1.BrowserWindow({
         height: 400,
         width: 400,
-        autoHideMenuBar: true
+        autoHideMenuBar: true,
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
+    // chromaWindow.setIgnoreMouseEvents(true);
     var id = electron_1.powerSaveBlocker.start('prevent-display-sleep');
     chromaWindow.loadFile(path.join(__dirname, '../src/windows/chroma.html'));
     chromaWindow.on('closed', function () {
         chromaWindow = null;
         electron_1.powerSaveBlocker.stop(id);
     });
+};
+var checkWindowFullscreen = function (window) {
+    return window && window.isFullScreen();
+};
+var fullscreenChromaWindow = function () {
+    if (chromaWindow) {
+        chromaWindow.setFullScreen(!checkWindowFullscreen(chromaWindow));
+    }
 };
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -55,7 +67,13 @@ electron_1.app.on('activate', function () {
 });
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-electron_1.ipcMain.on('chroma', function (e) {
+electron_1.ipcMain.on('chroma', function () {
     createChromaWindow();
+});
+electron_1.ipcMain.on('fullscreen-chroma-window', function () {
+    fullscreenChromaWindow();
+});
+electron_1.ipcMain.on('bug-show', function () {
+    chromaWindow.webContents.send('bug-show');
 });
 //# sourceMappingURL=index.js.map

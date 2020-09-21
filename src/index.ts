@@ -29,7 +29,12 @@ const createChromaWindow = (): void => {
     height: 400,
     width: 400,
     autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
+
+  // chromaWindow.setIgnoreMouseEvents(true);
 
   const id = powerSaveBlocker.start('prevent-display-sleep');
 
@@ -39,6 +44,16 @@ const createChromaWindow = (): void => {
     chromaWindow = null;
     powerSaveBlocker.stop(id);
   });
+};
+
+const checkWindowFullscreen = (window: BrowserWindow): boolean => {
+  return window && window.isFullScreen();
+};
+
+const fullscreenChromaWindow = (): void => {
+  if (chromaWindow) {
+    chromaWindow.setFullScreen(!checkWindowFullscreen(chromaWindow));
+  }
 };
 
 // This method will be called when Electron has finished
@@ -65,6 +80,14 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-ipcMain.on('chroma', (e) => {
+ipcMain.on('chroma', () => {
   createChromaWindow();
+});
+
+ipcMain.on('fullscreen-chroma-window', () => {
+  fullscreenChromaWindow();
+});
+
+ipcMain.on('bug-show', () => {
+  chromaWindow.webContents.send('bug-show');
 });
