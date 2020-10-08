@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "gsap": "^3.5.1"
+    "gsap": "^3.5.1",
+    "osc-js": "^2.1.0"
   }
 }

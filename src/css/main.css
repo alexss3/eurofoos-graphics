@@ -1,0 +1,24 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.brand-logo {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: normal;
+  margin-left: 1.5rem;
+}
+
+.eurofoos {
+  font-size: 1.5rem !important;
+}
+
+.eurofoos span {
+  font-style: italic;
+  font-weight: 700;
+}

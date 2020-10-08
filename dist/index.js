@@ -38,6 +38,9 @@ var createChromaWindow = function () {
     });
     var id = electron_1.powerSaveBlocker.start('prevent-display-sleep');
     chromaWindow.loadFile(path.join(__dirname, '../src/windows/chroma.html'));
+    chromaWindow.on('resize', function () {
+        chromaWindow.webContents.send('window-resized');
+    });
     chromaWindow.on('closed', function () {
         chromaWindow = null;
         electron_1.powerSaveBlocker.stop(id);
@@ -83,5 +86,8 @@ electron_1.ipcMain.on('bug-show', function () {
 });
 electron_1.ipcMain.on('bug-hide', function () {
     chromaWindow.webContents.send('bug-hide');
+});
+electron_1.ipcMain.on('video-play', function () {
+    chromaWindow.webContents.send('video-play');
 });
 //# sourceMappingURL=index.js.map

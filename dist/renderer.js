@@ -1,19 +1,36 @@
 "use strict";
 exports.__esModule = true;
 var electron_1 = require("electron");
+// CHROMA WINDOW
 var launchChromaButton = document.getElementById('launch-chroma-btn');
 launchChromaButton.addEventListener('click', function (e) {
     e.preventDefault();
     electron_1.ipcRenderer.send('chroma');
 });
-var bugShowButton = document.getElementById('bug-show');
-bugShowButton.addEventListener('click', function (e) {
+// BUG
+var bugToggleButton = document.getElementById('bug-toggle');
+bugToggleButton.addEventListener('click', function (e) {
     e.preventDefault();
-    electron_1.ipcRenderer.send('bug-show');
+    var state = bugToggleButton.getAttribute('data-state');
+    if (state === 'off') {
+        electron_1.ipcRenderer.send('bug-show');
+        bugToggleButton.setAttribute('data-state', 'on');
+        bugToggleButton.classList.remove('green');
+        bugToggleButton.classList.add('red');
+        bugToggleButton.children[1].innerHTML = 'HIDE';
+    }
+    else {
+        electron_1.ipcRenderer.send('bug-hide');
+        bugToggleButton.setAttribute('data-state', 'off');
+        bugToggleButton.classList.remove('red');
+        bugToggleButton.classList.add('green');
+        bugToggleButton.children[1].innerHTML = 'SHOW';
+    }
 });
-var bugHideButton = document.getElementById('bug-hide');
-bugHideButton.addEventListener('click', function (e) {
+// VIDEO PLAYER
+var videoPlayButton = document.getElementById('video-play');
+videoPlayButton.addEventListener('click', function (e) {
     e.preventDefault();
-    electron_1.ipcRenderer.send('bug-hide');
+    electron_1.ipcRenderer.send('video-play');
 });
 //# sourceMappingURL=renderer.js.map

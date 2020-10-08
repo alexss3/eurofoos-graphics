@@ -45,6 +45,10 @@ const createChromaWindow = (): void => {
 
   chromaWindow.loadFile(path.join(__dirname, '../src/windows/chroma.html'));
 
+  chromaWindow.on('resize', () => {
+    chromaWindow.webContents.send('window-resized');
+  });
+
   chromaWindow.on('closed', () => {
     chromaWindow = null;
     powerSaveBlocker.stop(id);
@@ -99,4 +103,8 @@ ipcMain.on('bug-show', () => {
 
 ipcMain.on('bug-hide', () => {
   chromaWindow.webContents.send('bug-hide');
+});
+
+ipcMain.on('video-play', () => {
+  chromaWindow.webContents.send('video-play');
 });
