@@ -108,3 +108,7 @@ ipcMain.on('bug-hide', () => {
 ipcMain.on('video-play', () => {
   chromaWindow.webContents.send('video-play');
 });
+
+ipcMain.on('video-stop', () => {
+  chromaWindow.webContents.send('video-stop');
+});

@@ -90,4 +90,7 @@ electron_1.ipcMain.on('bug-hide', function () {
 electron_1.ipcMain.on('video-play', function () {
     chromaWindow.webContents.send('video-play');
 });
+electron_1.ipcMain.on('video-stop', function () {
+    chromaWindow.webContents.send('video-stop');
+});
 //# sourceMappingURL=index.js.map

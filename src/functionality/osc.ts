@@ -1,5 +1,4 @@
 import * as OSC from 'osc-js';
-import { ipcRenderer } from 'electron';
 
 const osc = new OSC({
   plugin: new OSC.DatagramPlugin({

@@ -8,6 +8,15 @@ main {
   flex: 1 0 auto;
 }
 
+.page-footer {
+  background: rgb(33, 33, 33);
+  background: linear-gradient(
+    0deg,
+    rgba(33, 33, 33, 1) 0%,
+    rgba(66, 66, 66, 1) 100%
+  );
+}
+
 .brand-logo {
   font-family: 'Montserrat', sans-serif;
   font-weight: normal;
@@ -21,4 +30,8 @@ main {
 .eurofoos span {
   font-style: italic;
   font-weight: 700;
+}
+
+#settings-button {
+  margin: 0 0 10px 10px;
 }

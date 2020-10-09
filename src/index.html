@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>EUROFOOSLIVE Graphics Keyer</title>
     <!--Import Google Icon Font-->
     <!-- <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -29,73 +29,76 @@
     />
   </head>
   <body class="grey darken-4 grey-text">
-    <nav class="black">
-      <div class="nav-wrapper">
-        <a href="#" class="brand-logo eurofoos"
-          >EUROFOOS <span>LIVE</span> Graphics</a
-        >
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li>
-            <a
-              href="#"
-              id="launch-chroma-btn"
-              class="waves-effect waves-light btn green accent-4"
-              ><i class="material-icons right">desktop_windows</i>Launch
-              Chroma</a
+    <header>
+      <nav class="black">
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo eurofoos"
+            >EUROFOOS <span>LIVE</span> Graphics</a
+          >
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li>
+              <a
+                href="#"
+                id="launch-chroma-btn"
+                class="waves-effect waves-light btn green accent-4"
+                ><i class="material-icons right">desktop_windows</i>Launch
+                Chroma</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <div class="row"></div>
+        <div class="row">
+          <div class="col s2 center-align"><h5>BUG</h5></div>
+          <div class="col s2 center-align"><h5>VIDEO</h5></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+            <button
+              id="bug-toggle"
+              class="btn waves-effect waves-dark green darken-1"
+              data-state="off"
             >
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <div class="container">
-      <div class="row"></div>
-      <div class="row">
-        <div class="col s2 center-align"><h5>BUG</h5></div>
-        <div class="col s2 center-align"><h5>VIDEO</h5></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-      </div>
-
-      <div class="row">
-        <div class="col s2">
-          <button
-            id="bug-toggle"
-            class="btn waves-effect waves-dark green darken-1"
-            data-state="off"
-          >
-            <i class="material-icons left">bug_report</i><span>SHOW</span>
-          </button>
+              <i class="material-icons left">bug_report</i><span>SHOW</span>
+            </button>
+          </div>
+          <div class="col s2">
+            <button
+              id="video-play"
+              class="btn waves-effect waves-dark green darken-1"
+              data-state="off"
+            >
+              <i class="material-icons left">ondemand_video</i><span>PLAY</span>
+            </button>
+          </div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
         </div>
-        <div class="col s2">
-          <button
-            id="video-play"
-            class="btn waves-effect waves-dark green darken-1"
-          >
-            <i class="material-icons left">ondemand_video</i><span>PLAY</span>
-          </button>
-        </div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
-        <div class="col s2"></div>
       </div>
-    </div>
-
-    <!-- <footer class="page-footer">
+    </main>
+    <footer class="page-footer grey-text">
+      <div class="container"></div>
       <div class="footer-copyright">
-        <div class="container">
-          © 2014 Copyright Text
-          <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-        </div>
+        <button id="settings-button" class="btn grey darken-3">
+          <i class="material-icons">settings</i>
+        </button>
       </div>
-    </footer> -->
+    </footer>
 
     <script>
       require('../dist/renderer.js');
