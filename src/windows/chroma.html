@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="css/chroma.css" />
+    <link rel="stylesheet" href="../css/fonts.css" />
   </head>
   <body>
     <div id="chroma">
@@ -16,11 +17,26 @@
       <div id="bug">
         <div id="bug_transition" class="bug__transition"></div>
       </div>
+      <div id="commentators">
+        <div id="commentators_transition" class="commentators__transition">
+          <div id="commentator-title-one" class="commentator-name">
+            <svg viewBox="-10 -20 200 30">
+              <text x="0" y="0">Commentator One</text>
+            </svg>
+          </div>
+          <div id="commentator-title-two" class="commentator-name">
+            <svg viewBox="-10 -20 200 30">
+              <text x="0" y="0">Commentator Two</text>
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
     <script>
       require('../../dist/windows/chroma.js');
       require('../../dist/components/bug.js');
       require('../../dist/components/video.js');
+      require('../../dist/components/commentators.js');
     </script>
   </body>
 </html>

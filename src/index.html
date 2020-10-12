@@ -24,7 +24,7 @@
     <link
       type="text/css"
       rel="stylesheet"
-      href="css/materialize.min.css"
+      href="css/materialize.css"
       media="screen,projection"
     />
   </head>
@@ -55,8 +55,7 @@
         <div class="row">
           <div class="col s2 center-align"><h5>BUG</h5></div>
           <div class="col s2 center-align"><h5>VIDEO</h5></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
+          <div class="col s4"><h5>COMMENTATORS</h5></div>
           <div class="col s2"></div>
           <div class="col s2"></div>
           <div class="col s2"></div>
@@ -82,9 +81,55 @@
               <i class="material-icons left">ondemand_video</i><span>PLAY</span>
             </button>
           </div>
+          <div class="col s4">
+            <button
+              id="commentators-toggle"
+              class="btn waves-effect waves-dark green darken-1"
+              data-state="off"
+            >
+              <i class="material-icons left">ondemand_video</i><span>SHOW</span>
+            </button>
+          </div>
           <div class="col s2"></div>
           <div class="col s2"></div>
           <div class="col s2"></div>
+          <div class="col s2"></div>
+        </div>
+
+        <div class="row">
+          <div class="col s4 left-align"><h5>Commentator 1</h5></div>
+          <div class="col s4 left-align"><h5>Commentator 2</h5></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+          <div class="col s2"></div>
+        </div>
+
+        <div class="row">
+          <div class="col s4">
+            <input
+              placeholder="Placeholder"
+              id="commentator-one"
+              type="text"
+              class="validate grey-text"
+            />
+          </div>
+          <div class="col s4">
+            <input
+              placeholder="Placeholder"
+              id="commentator-two"
+              type="text"
+              class="validate grey-text"
+            />
+          </div>
+          <div class="col s2">
+            <button
+              class="btn waves-effect waves-dark green darken-1"
+              id="commentators-update"
+            >
+              Update
+            </button>
+          </div>
           <div class="col s2"></div>
           <div class="col s2"></div>
           <div class="col s2"></div>

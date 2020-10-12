@@ -11,3 +11,19 @@ ipcRenderer.on('window-resized', () => {
   player.style.width = '100%';
   player.style.height = '100%';
 });
+
+// Commentators
+// const commentatorsWrapper = document.getElementById('commentators');
+const commentatorOne = document.querySelector(
+  '#commentator-title-one svg text'
+);
+const commentatorTwo = document.querySelector(
+  '#commentator-title-two svg text'
+);
+
+// commentatorOne.innerHTML = 'Test One';
+// commentatorTwo.innerHTML = 'Test Two';
+ipcRenderer.on('commentator-names-update', (e, ...args) => {
+  commentatorOne.innerHTML = args[0];
+  commentatorTwo.innerHTML = args[1];
+});

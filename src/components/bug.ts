@@ -8,7 +8,7 @@ ipcRenderer.on('bug-show', () => {
   bugTimeline
     .to('#bug', {
       duration: 1,
-      x: -350,
+      x: -400,
       overwrite: true,
     })
     .to('#bug', {
@@ -32,6 +32,6 @@ ipcRenderer.on('bug-hide', () => {
     })
     .to('#bug', {
       duration: 1,
-      x: 350,
+      x: 400,
     });
 });

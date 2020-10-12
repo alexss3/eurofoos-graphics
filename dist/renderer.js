@@ -51,4 +51,34 @@ videoPlayButton.addEventListener('click', function (e) {
         videoPlayButton.children[1].innerHTML = 'PLAY';
     }
 });
+// COMMENTATORS
+var commentatorsButton = document.getElementById('commentators-toggle');
+commentatorsButton.addEventListener('click', function (e) {
+    e.preventDefault();
+    var state = commentatorsButton.getAttribute('data-state');
+    if (state === 'off') {
+        electron_1.ipcRenderer.send('commentators-show');
+        commentatorsButton.setAttribute('data-state', 'on');
+        commentatorsButton.classList.remove('green');
+        commentatorsButton.classList.add('red');
+        commentatorsButton.classList.add('pulse');
+        commentatorsButton.children[1].innerHTML = 'HIDE';
+    }
+    else {
+        electron_1.ipcRenderer.send('commentators-hide');
+        commentatorsButton.setAttribute('data-state', 'off');
+        commentatorsButton.classList.add('green');
+        commentatorsButton.classList.remove('red');
+        commentatorsButton.classList.remove('pulse');
+        commentatorsButton.children[1].innerHTML = 'SHOW';
+    }
+});
+var commentatorUpdateButton = document.getElementById('commentators-update');
+var commentatorOneTitle = document.getElementById('commentator-one');
+var commentatorTwoTitle = document.getElementById('commentator-two');
+commentatorUpdateButton.addEventListener('click', function (e) {
+    e.preventDefault();
+    // send the values of the commentator names to ipcMain then to chroma window
+    electron_1.ipcRenderer.send('commentator-names-update', commentatorOneTitle.value, commentatorTwoTitle.value);
+});
 //# sourceMappingURL=renderer.js.map

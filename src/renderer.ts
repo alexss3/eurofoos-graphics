@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcMain, ipcRenderer } from 'electron';
 
 // CHROMA WINDOW
 const launchChromaButton = document.getElementById('launch-chroma-btn');
@@ -54,4 +54,42 @@ videoPlayButton.addEventListener('click', (e) => {
     videoPlayButton.classList.remove('pulse');
     videoPlayButton.children[1].innerHTML = 'PLAY';
   }
+});
+
+// COMMENTATORS
+
+const commentatorsButton = document.getElementById('commentators-toggle');
+
+commentatorsButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  const state = commentatorsButton.getAttribute('data-state');
+  if (state === 'off') {
+    ipcRenderer.send('commentators-show');
+    commentatorsButton.setAttribute('data-state', 'on');
+    commentatorsButton.classList.remove('green');
+    commentatorsButton.classList.add('red');
+    commentatorsButton.classList.add('pulse');
+    commentatorsButton.children[1].innerHTML = 'HIDE';
+  } else {
+    ipcRenderer.send('commentators-hide');
+    commentatorsButton.setAttribute('data-state', 'off');
+    commentatorsButton.classList.add('green');
+    commentatorsButton.classList.remove('red');
+    commentatorsButton.classList.remove('pulse');
+    commentatorsButton.children[1].innerHTML = 'SHOW';
+  }
+});
+
+const commentatorUpdateButton = document.getElementById('commentators-update');
+const commentatorOneTitle: any = document.getElementById('commentator-one');
+const commentatorTwoTitle: any = document.getElementById('commentator-two');
+
+commentatorUpdateButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  // send the values of the commentator names to ipcMain then to chroma window
+  ipcRenderer.send(
+    'commentator-names-update',
+    commentatorOneTitle.value,
+    commentatorTwoTitle.value
+  );
 });
