@@ -51,6 +51,13 @@ videoPlayButton.addEventListener('click', function (e) {
         videoPlayButton.children[1].innerHTML = 'PLAY';
     }
 });
+electron_1.ipcRenderer.on('video-ended', function () {
+    videoPlayButton.setAttribute('data-state', 'off');
+    videoPlayButton.classList.add('green');
+    videoPlayButton.classList.remove('red');
+    videoPlayButton.classList.remove('pulse');
+    videoPlayButton.children[1].innerHTML = 'PLAY';
+});
 // COMMENTATORS
 var commentatorsButton = document.getElementById('commentators-toggle');
 commentatorsButton.addEventListener('click', function (e) {

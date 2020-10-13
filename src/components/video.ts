@@ -15,4 +15,5 @@ ipcRenderer.on('video-stop', () => {
 
 player.addEventListener('ended', () => {
   player.style.display = 'none';
+  ipcRenderer.send('video-ended');
 });

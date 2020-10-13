@@ -1,4 +1,4 @@
-import { ipcMain, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 
 // CHROMA WINDOW
 const launchChromaButton = document.getElementById('launch-chroma-btn');
@@ -54,6 +54,14 @@ videoPlayButton.addEventListener('click', (e) => {
     videoPlayButton.classList.remove('pulse');
     videoPlayButton.children[1].innerHTML = 'PLAY';
   }
+});
+
+ipcRenderer.on('video-ended', () => {
+  videoPlayButton.setAttribute('data-state', 'off');
+  videoPlayButton.classList.add('green');
+  videoPlayButton.classList.remove('red');
+  videoPlayButton.classList.remove('pulse');
+  videoPlayButton.children[1].innerHTML = 'PLAY';
 });
 
 // COMMENTATORS
