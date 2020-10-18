@@ -29,3 +29,11 @@ osc.on('/eurofooslive/play-video', () => {
   console.log('Playing the video...');
   document.getElementById('video-play').click();
 });
+
+osc.on('/eurofooslive/show-comms', () => {
+  document.getElementById('commentators-toggle').click();
+});
+
+osc.on('/eurofooslive/show-webcam', () => {
+  document.getElementById('webcam-toggle').click();
+});

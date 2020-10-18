@@ -1,4 +1,8 @@
 import { ipcRenderer } from 'electron';
+import * as storage from 'electron-json-storage';
+import * as os from 'os';
+import { ConfigData } from '../helpers/interfaces';
+import { config } from '../config/config';
 
 const chromaWindow = document.getElementById('chroma');
 
@@ -13,17 +17,50 @@ ipcRenderer.on('window-resized', () => {
 });
 
 // Commentators
-// const commentatorsWrapper = document.getElementById('commentators');
-const commentatorOne = document.querySelector(
-  '#commentator-title-one svg text'
-);
-const commentatorTwo = document.querySelector(
-  '#commentator-title-two svg text'
-);
+const updateCommNames = (names: any): void => {
+  const commentatorOne = document.querySelector(
+    '#commentator-title-one svg text'
+  );
+  const commentatorTwo = document.querySelector(
+    '#commentator-title-two svg text'
+  );
+  commentatorOne.innerHTML = names[0].name;
+  commentatorTwo.innerHTML = names[1].name;
+};
 
-// commentatorOne.innerHTML = 'Test One';
-// commentatorTwo.innerHTML = 'Test Two';
-ipcRenderer.on('commentator-names-update', (e, ...args) => {
-  commentatorOne.innerHTML = args[0];
-  commentatorTwo.innerHTML = args[1];
+ipcRenderer.on('commentator-names-update', (e, names) => {
+  updateCommNames(names);
+});
+
+// Bug
+
+const updateBug = (path: string): void => {
+  const bugEl: any = document.getElementById('bug-image');
+  bugEl.src = path.split('file:')[1];
+}
+
+ipcRenderer.on('bug:updated', (event, path) => {
+  updateBug(path);
+});
+
+// Video
+
+const updateVideo = (path: string):void => {
+  const videoEl: any = document.getElementById('video-container');
+  videoEl.src = path.split('file:')[1];
+}
+
+ipcRenderer.on('video:updated', (event, path) => {
+  updateVideo(path);
+});
+
+// Load settings from config file
+
+storage.setDataPath(os.homedir());
+
+storage.get(config.settings.key, (err, data: ConfigData) => {
+  if (err) console.error(err);
+  updateBug(data.bug.path);
+  updateVideo(data.video.path);
+  updateCommNames(data.commentators);
 });

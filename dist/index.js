@@ -1,15 +1,9 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 exports.__esModule = true;
 var electron_1 = require("electron");
 var path = require("path");
-// import { HyperdeckServer } from 'hyperdeck-server-connection';
+var windowStateKeeper = require("electron-window-state");
+// import events from './functionality/events';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
     // eslint-disable-line global-require
@@ -23,19 +17,29 @@ var createMainWindow = function () {
         height: 800,
         width: 1200,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            enableRemoteModule: true
         }
     });
     // and load the index.html of the app.
     mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
 };
 var createChromaWindow = function () {
+    var chromaWindowState = windowStateKeeper({
+        defaultHeight: 1080,
+        defaultWidth: 1920,
+        file: 'chroma.json'
+    });
     chromaWindow = new electron_1.BrowserWindow({
-        height: 400,
-        width: 400,
+        height: chromaWindowState.height,
+        width: chromaWindowState.width,
+        x: chromaWindowState.x,
+        y: chromaWindowState.y,
         autoHideMenuBar: true,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            backgroundThrottling: false,
+            enableRemoteModule: true
         }
     });
     // Hide the cursor from view, else it will
@@ -46,6 +50,7 @@ var createChromaWindow = function () {
     });
     var id = electron_1.powerSaveBlocker.start('prevent-display-sleep');
     chromaWindow.loadFile(path.join(__dirname, '../src/windows/chroma.html'));
+    chromaWindowState.manage(chromaWindow);
     chromaWindow.on('resize', function () {
         chromaWindow.webContents.send('window-resized');
     });
@@ -57,13 +62,29 @@ var createChromaWindow = function () {
 var checkWindowFullscreen = function (window) {
     return window && window.isFullScreen();
 };
-var fullscreenChromaWindow = function () {
-    if (chromaWindow) {
-        chromaWindow.setFullScreen(!checkWindowFullscreen(chromaWindow));
+var fullscreenBrowserWindow = function (window) {
+    window && window.setFullScreen(!checkWindowFullscreen(window));
+};
+var createMenus = function () {
+    /* eslint-disable-next-line */
+    var menuTemplate = [
+        {
+            label: 'File',
+            submenu: [
+                { label: 'Cool beans' }
+            ]
+        }
+    ];
+    if (process.platform === 'darwin') {
+        menuTemplate.unshift({});
     }
+    var menu = electron_1.Menu.buildFromTemplate(menuTemplate);
+    electron_1.Menu.setApplicationMenu(menu);
 };
 var initialSetup = function () {
     createMainWindow();
+    // Create menus
+    // createMenus();
 };
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -87,38 +108,116 @@ electron_1.app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 electron_1.ipcMain.on('chroma', function () {
-    createChromaWindow();
+    if (!chromaWindow) {
+        createChromaWindow();
+    }
+    else {
+        chromaWindow.focus();
+    }
 });
 electron_1.ipcMain.on('fullscreen-chroma-window', function () {
-    fullscreenChromaWindow();
+    chromaWindow && fullscreenBrowserWindow(chromaWindow);
 });
-electron_1.ipcMain.on('bug-show', function () {
-    chromaWindow.webContents.send('bug-show');
+electron_1.ipcMain.on('bug:show', function () {
+    chromaWindow && chromaWindow.webContents.send('bug:show');
 });
-electron_1.ipcMain.on('bug-hide', function () {
-    chromaWindow.webContents.send('bug-hide');
+electron_1.ipcMain.on('bug:hide', function () {
+    chromaWindow && chromaWindow.webContents.send('bug:hide');
 });
 electron_1.ipcMain.on('video-play', function () {
-    chromaWindow.webContents.send('video-play');
+    chromaWindow && chromaWindow.webContents.send('video-play');
 });
 electron_1.ipcMain.on('video-stop', function () {
-    chromaWindow.webContents.send('video-stop');
+    chromaWindow && chromaWindow.webContents.send('video-stop');
 });
 electron_1.ipcMain.on('video-ended', function () {
     mainWindow.webContents.send('video-ended');
 });
+electron_1.ipcMain.on('webcam:start', function () {
+    chromaWindow && chromaWindow.webContents.send('webcam:start');
+});
+electron_1.ipcMain.on('webcam:stop', function () {
+    chromaWindow && chromaWindow.webContents.send('webcam:stop');
+});
 electron_1.ipcMain.on('commentators-show', function () {
-    chromaWindow.webContents.send('commentators-show');
+    chromaWindow && chromaWindow.webContents.send('commentators-show');
 });
 electron_1.ipcMain.on('commentators-hide', function () {
-    chromaWindow.webContents.send('commentators-hide');
+    chromaWindow && chromaWindow.webContents.send('commentators-hide');
 });
-electron_1.ipcMain.on('commentator-names-update', function (e) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = chromaWindow.webContents).send.apply(_a, __spreadArrays(['commentator-names-update'], args));
+electron_1.ipcMain.on('commentator-names-update', function (event, names) {
+    chromaWindow && chromaWindow.webContents.send('commentator-names-update', names);
+    event.sender.send('comms:updated', names);
+});
+// Choose Logo File
+electron_1.ipcMain.on('bug:choose', function (event) {
+    var options = {
+        properties: ['openFile'],
+        filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }]
+    };
+    electron_1.dialog
+        .showOpenDialog(mainWindow, options)
+        .then(function (result) {
+        var path = "file:" + result.filePaths[0];
+        event.sender.send('bug:chosen', path);
+    })["catch"](function (err) {
+        console.error(err);
+    });
+});
+electron_1.ipcMain.on('bug:updated', function (event, path) {
+    chromaWindow && chromaWindow.webContents.send('bug:updated', path);
+    event.sender.send('bug:updated', path);
+});
+// Choose Video File
+electron_1.ipcMain.on('video:choose', function (event) {
+    var options = {
+        properties: ['openFile'],
+        filters: [{ name: 'Movies', extensions: ['mov', 'mp4', 'avi', 'mpeg', 'mpg', 'mkv'] }]
+    };
+    electron_1.dialog
+        .showOpenDialog(mainWindow, options)
+        .then(function (result) {
+        var path = "file:" + result.filePaths[0];
+        event.sender.send('video:chosen', path);
+    })["catch"](function (err) {
+        console.error(err);
+    });
+});
+electron_1.ipcMain.on('video:updated', function (event, path) {
+    chromaWindow && chromaWindow.webContents.send('video:updated', path);
+    event.sender.send('video:updated', path);
+});
+// Overlay
+electron_1.ipcMain.on('overlay:add', function (event) {
+    var options = {
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }]
+    };
+    electron_1.dialog
+        .showOpenDialog(mainWindow, options)
+        .then(function (result) {
+        var paths = result.filePaths.map(function (path) {
+            return "file:" + path;
+        });
+        event.sender.send('overlay:chosen', paths);
+    })["catch"](function (err) {
+        console.error(err);
+    });
+});
+electron_1.ipcMain.on('overlay:updated', function (event, paths) {
+    //   const filesArray = [];
+    //   paths.forEach((path, index) => {
+    //     let imagePath = `file:${path}`;
+    //     let currentLength = document.querySelectorAll(".images_holder__image").length;
+    //     let order;
+    //     if (currentLength == 0) {
+    //     order = index;
+    //     } else {
+    //     order = currentLength + index;
+    //     }
+    //     downloadImage(imagePath, order);
+    //     filesArray.push(imagePath);
+    //   });
+    //  return addImages(filesArray);
 });
 //# sourceMappingURL=index.js.map

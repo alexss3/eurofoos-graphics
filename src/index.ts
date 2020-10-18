@@ -2,11 +2,19 @@ import {
   app,
   BrowserWindow,
   ipcMain,
-  ipcRenderer,
+  dialog,
   powerSaveBlocker,
+  OpenDialogOptions,
+  Menu,
+  ipcRenderer
 } from 'electron';
+
+import * as os from 'os';
 import * as path from 'path';
-// import { HyperdeckServer } from 'hyperdeck-server-connection';
+import * as storage from 'electron-json-storage';
+import * as windowStateKeeper from 'electron-window-state';
+
+// import events from './functionality/events';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -24,20 +32,33 @@ const createMainWindow = (): void => {
     width: 1200,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true
     },
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
+
 };
 
 const createChromaWindow = (): void => {
+
+  const chromaWindowState = windowStateKeeper({
+    defaultHeight: 1080,
+    defaultWidth: 1920,
+    file: 'chroma.json'
+  });
+
   chromaWindow = new BrowserWindow({
-    height: 400,
-    width: 400,
+    height: chromaWindowState.height,
+    width: chromaWindowState.width,
+    x: chromaWindowState.x,
+    y: chromaWindowState.y,
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
+      backgroundThrottling: false,
+      enableRemoteModule: true
     },
   });
 
@@ -51,6 +72,8 @@ const createChromaWindow = (): void => {
   const id = powerSaveBlocker.start('prevent-display-sleep');
 
   chromaWindow.loadFile(path.join(__dirname, '../src/windows/chroma.html'));
+
+  chromaWindowState.manage(chromaWindow);
 
   chromaWindow.on('resize', () => {
     chromaWindow.webContents.send('window-resized');
@@ -66,14 +89,33 @@ const checkWindowFullscreen = (window: BrowserWindow): boolean => {
   return window && window.isFullScreen();
 };
 
-const fullscreenChromaWindow = (): void => {
-  if (chromaWindow) {
-    chromaWindow.setFullScreen(!checkWindowFullscreen(chromaWindow));
-  }
+const fullscreenBrowserWindow = (window: BrowserWindow): void => {
+  window && window.setFullScreen(!checkWindowFullscreen(window));
 };
+
+const createMenus = (): void => {
+  /* eslint-disable-next-line */
+  const menuTemplate: Array<any> = [
+    {
+      label: 'File',
+      submenu: [
+        { label: 'Cool beans'}
+      ]
+    }
+  ];
+
+  if (process.platform === 'darwin') {
+    menuTemplate.unshift({});
+  }
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+}
 
 const initialSetup = (): void => {
   createMainWindow();
+  // Create menus
+  // createMenus();
 };
 
 // This method will be called when Electron has finished
@@ -101,41 +143,144 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 ipcMain.on('chroma', () => {
-  createChromaWindow();
+  if (!chromaWindow) {
+    createChromaWindow();
+  } else {
+    chromaWindow.focus();
+  }
 });
 
 ipcMain.on('fullscreen-chroma-window', () => {
-  fullscreenChromaWindow();
+  chromaWindow && fullscreenBrowserWindow(chromaWindow);
 });
 
-ipcMain.on('bug-show', () => {
-  chromaWindow.webContents.send('bug-show');
+ipcMain.on('bug:show', () => {
+  chromaWindow && chromaWindow.webContents.send('bug:show');
 });
 
-ipcMain.on('bug-hide', () => {
-  chromaWindow.webContents.send('bug-hide');
+ipcMain.on('bug:hide', () => {
+  chromaWindow && chromaWindow.webContents.send('bug:hide');
 });
 
 ipcMain.on('video-play', () => {
-  chromaWindow.webContents.send('video-play');
+  chromaWindow && chromaWindow.webContents.send('video-play');
 });
 
 ipcMain.on('video-stop', () => {
-  chromaWindow.webContents.send('video-stop');
+  chromaWindow && chromaWindow.webContents.send('video-stop');
 });
 
 ipcMain.on('video-ended', () => {
   mainWindow.webContents.send('video-ended');
 });
 
+ipcMain.on('webcam:start', () => {
+  chromaWindow && chromaWindow.webContents.send('webcam:start');
+});
+
+ipcMain.on('webcam:stop', () => {
+  chromaWindow && chromaWindow.webContents.send('webcam:stop');
+});
+
+
 ipcMain.on('commentators-show', () => {
-  chromaWindow.webContents.send('commentators-show');
+  chromaWindow && chromaWindow.webContents.send('commentators-show');
 });
 
 ipcMain.on('commentators-hide', () => {
-  chromaWindow.webContents.send('commentators-hide');
+  chromaWindow && chromaWindow.webContents.send('commentators-hide');
 });
 
-ipcMain.on('commentator-names-update', (e, ...args) => {
-  chromaWindow.webContents.send('commentator-names-update', ...args);
+ipcMain.on('commentator-names-update', (event, names) => {
+  chromaWindow && chromaWindow.webContents.send('commentator-names-update', names);
+  event.sender.send('comms:updated', names);
+});
+
+// Choose Logo File
+ipcMain.on('bug:choose', (event) => {
+  const options: OpenDialogOptions = {
+    properties: ['openFile'],
+    filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
+  };
+
+  dialog
+    .showOpenDialog(mainWindow, options)
+    .then((result) => {
+      const path = `file:${result.filePaths[0]}`;
+      event.sender.send('bug:chosen', path);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+
+ipcMain.on('bug:updated', (event, path) => {
+  chromaWindow && chromaWindow.webContents.send('bug:updated', path);
+  event.sender.send('bug:updated', path);
+});
+
+
+// Choose Video File
+ipcMain.on('video:choose', (event) => {
+  const options: OpenDialogOptions = {
+    properties: ['openFile'],
+    filters: [{ name: 'Movies', extensions: ['mov', 'mp4', 'avi', 'mpeg', 'mpg', 'mkv'] }],
+  };
+
+  dialog
+    .showOpenDialog(mainWindow, options)
+    .then((result) => {
+      const path = `file:${result.filePaths[0]}`;
+      event.sender.send('video:chosen', path);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+ipcMain.on('video:updated', (event, path) => {
+  chromaWindow && chromaWindow.webContents.send('video:updated', path);
+  event.sender.send('video:updated', path);
+});
+
+// Overlay
+
+ipcMain.on('overlay:add', (event) => {
+  const options: OpenDialogOptions = {
+    properties: ['openFile', 'multiSelections'],
+    filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
+  };
+
+  dialog
+    .showOpenDialog(mainWindow, options)
+    .then((result) => {
+      const paths = result.filePaths.map(path => {
+        return `file:${path}`;
+      }) ;
+      event.sender.send('overlay:chosen', paths);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+ipcMain.on('overlay:updated', (event, paths) => {
+//   const filesArray = [];
+//   paths.forEach((path, index) => {
+//     let imagePath = `file:${path}`;
+//     let currentLength = document.querySelectorAll(".images_holder__image").length;
+//     let order;
+
+//     if (currentLength == 0) {
+//     order = index;
+//     } else {
+//     order = currentLength + index;
+//     }
+//     downloadImage(imagePath, order);
+
+//     filesArray.push(imagePath);
+//   });
+
+//  return addImages(filesArray);
 });

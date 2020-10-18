@@ -50,106 +50,218 @@
       </nav>
     </header>
     <main>
-      <div class="container">
         <div class="row"></div>
-        <div class="row">
-          <div class="col s2 center-align"><h5>BUG</h5></div>
-          <div class="col s2 center-align"><h5>VIDEO</h5></div>
-          <div class="col s4"><h5>COMMENTATORS</h5></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
+        <!-- Control Panel Page -->
+        <div id="page-control" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10">
+              <h3>Control Panel</h3>  
+            </div>
+            <div class="col s1"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s1 button-wrapper">
+              <button
+                id="bug-toggle"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">bug_report</i>
+              </button>
+              <span class="cp-button-caption">Bug</span>
+            </div>
+            <div class="col s1 button-wrapper">
+              <button
+                id="video-play"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">ondemand_video</i>
+              </button>
+              <span class="cp-button-caption">Video</span>
+            </div>
+            <div class="col s1 button-wrapper">
+              <button
+                id="commentators-toggle"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">headset_mic</i>
+              </button>
+              <span class="cp-button-caption">Comm.</span>
+            </div>
+            <div class="col s1 button-wrapper">
+              <button
+                id="webcam-toggle"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">video_call</i>
+              </button>
+              <span class="cp-button-caption">Webcam</span>
+            </div>
+
+          </div>
+        </div>
+        
+        <!-- Bug Settings Page -->
+        <div id="page-bug" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Bug Settings</h3></div>
+            <div class="col s1"></div>
+          </div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s5">
+              <input type="text" id="bug-path" class="file-path validate grey-text">
+            </div>
+            <div class="col s5">
+              <button id="choose-bug" class="btn waves-effect waves-light">Choose</button>
+            </div>
+            <div class="col s1"></div>
+          </div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s5">
+              <div id="bug-preview">
+                Bug Preview
+                <img src="" alt="" id="inline-bug-preview">
+              </div>
+            </div>
+            <div class="col s1"></div>
+          </div>
         </div>
 
-        <div class="row">
-          <div class="col s2">
-            <button
-              id="bug-toggle"
-              class="btn waves-effect waves-dark green darken-1"
-              data-state="off"
-            >
-              <i class="material-icons left">bug_report</i><span>SHOW</span>
-            </button>
+        <!-- Video Settings Page -->
+
+        <div id="page-video" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Video Settings</h3></div>
+            <div class="col s1"></div>
           </div>
-          <div class="col s2">
-            <button
-              id="video-play"
-              class="btn waves-effect waves-dark green darken-1"
-              data-state="off"
-            >
-              <i class="material-icons left">ondemand_video</i><span>PLAY</span>
-            </button>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s5">
+              <input type="text" id="video-path" class="file-path validate grey-text">
+            </div>
+            <div class="col s5">
+              <button id="choose-video" class="btn waves-effect waves-light">Choose</button>
+            </div>
+            <div class="col s1"></div>
           </div>
-          <div class="col s4">
-            <button
-              id="commentators-toggle"
-              class="btn waves-effect waves-dark green darken-1"
-              data-state="off"
-            >
-              <i class="material-icons left">ondemand_video</i><span>SHOW</span>
-            </button>
-          </div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
         </div>
 
-        <div class="row">
-          <div class="col s4 left-align"><h5>Commentator 1</h5></div>
-          <div class="col s4 left-align"><h5>Commentator 2</h5></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
+        <!-- Commentators Page -->
+        <div id="page-comm" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Commentator Settings</h3></div>
+            <div class="col s1"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s4 left-align"><h5>Commentator 1</h5></div>
+            <div class="col s4 left-align"><h5>Commentator 2</h5></div>
+            <div class="col s1"></div>
+
+          </div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s4">
+              <input
+                placeholder="Placeholder"
+                id="commentator-one"
+                type="text"
+                class="validate grey-text"
+              />
+            </div>
+            <div class="col s4">
+              <input
+                placeholder="Placeholder"
+                id="commentator-two"
+                type="text"
+                class="validate grey-text"
+              />
+            </div>
+            <div class="col s2">
+              <button
+                class="btn waves-effect waves-light"
+                id="commentators-update"
+              >
+                Update
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="row">
-          <div class="col s4">
-            <input
-              placeholder="Placeholder"
-              id="commentator-one"
-              type="text"
-              class="validate grey-text"
-            />
+        <!-- Overlay Settings Page -->
+        <div id="page-overlay" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Overlay Settings</h3></div>
+            <div class="col s1"></div>
           </div>
-          <div class="col s4">
-            <input
-              placeholder="Placeholder"
-              id="commentator-two"
-              type="text"
-              class="validate grey-text"
-            />
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10">
+              <button
+                class="btn waves-effect waves-light"
+                id="overlay-add"
+              >
+                Add
+              </button>
+            </div>
           </div>
-          <div class="col s2">
-            <button
-              class="btn waves-effect waves-dark green darken-1"
-              id="commentators-update"
-            >
-              Update
-            </button>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10">
+              <div id="images_holder" class="images_holder"></div>
+            </div>
+            <div class="col s1"></div>
           </div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
-          <div class="col s2"></div>
         </div>
-      </div>
+
     </main>
-    <footer class="page-footer grey-text">
-      <div class="container"></div>
-      <div class="footer-copyright">
-        <button id="settings-button" class="btn grey darken-3">
-          <i class="material-icons">settings</i>
-        </button>
-      </div>
+    <footer>
+      <nav class="page-footer grey-text">
+        <div class="nav-wrapper">
+          <ul id="footer-nav">
+            <li data-state="on" class="selected" id="bottom-nav-control"><a href="#"><i class="material-icons small">apps</i><span>Control</span></a></li>
+            <li data-state="off" id="bottom-nav-bug"><a href="#"><i class="material-icons small">bug_report</i><span>Bug</span></a></li>
+            <li data-state="off" id="bottom-nav-video"><a href="#"><i class="material-icons small">ondemand_video</i><span>Videos</span></a></li>
+            <li data-state="off" id="bottom-nav-comm"><a href="#"><i class="material-icons small">headset_mic</i><span>Comm.</span></a></li>
+            <li data-state="off" id="bottom-nav-overlay"><a href="#"><i class="material-icons small">insert_photo</i><span>Overlays</span></a></li>
+          </ul>
+        </div>
+      </nav>
     </footer>
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="lib/materialize.min.js"></script>
 
     <script>
       require('../dist/renderer.js');
+      require('../dist/functionality/storage.js');
       require('../dist/functionality/osc.js');
     </script>
-    <!--JavaScript at end of body for optimized loading-->
-    <script type="text/javascript" src="lib/materialize.min.js"></script>
   </body>
 </html>

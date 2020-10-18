@@ -12,21 +12,28 @@
       <video
         id="video-container"
         class="video"
-        src="../assets/video/aarhus-commercial.mp4"
+        src=""
       ></video>
+
+      <video src="" id="webcam-container" class="webcam"></video>
+
+      <div id="image-overlay">
+        <img src="" alt="" />
+      </div>
+
       <div id="bug">
-        <div id="bug_transition" class="bug__transition"></div>
+          <img id="bug-image" src="" />
       </div>
       <div id="commentators">
         <div id="commentators_transition" class="commentators__transition">
           <div id="commentator-title-one" class="commentator-name">
             <svg viewBox="-10 -20 200 30">
-              <text x="0" y="0">Commentator One</text>
+              <text x="0" y="0" fill="#3af79f">Commentator One</text>
             </svg>
           </div>
           <div id="commentator-title-two" class="commentator-name">
             <svg viewBox="-10 -20 200 30">
-              <text x="0" y="0">Commentator Two</text>
+              <text x="0" y="0" fill="#3af79f">Commentator Two</text>
             </svg>
           </div>
         </div>
@@ -36,6 +43,7 @@
       require('../../dist/windows/chroma.js');
       require('../../dist/components/bug.js');
       require('../../dist/components/video.js');
+      require('../../dist/components/webcam.js');
       require('../../dist/components/commentators.js');
     </script>
   </body>
