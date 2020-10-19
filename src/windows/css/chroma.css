@@ -98,10 +98,8 @@ body {
 
 #webcam-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 800px;
-  height: 600px;
-  margin-left: -400px;
-  margin-top: -300px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
