@@ -5,13 +5,10 @@ import {
   dialog,
   powerSaveBlocker,
   OpenDialogOptions,
-  Menu,
-  ipcRenderer
+  Menu
 } from 'electron';
 
-import * as os from 'os';
 import * as path from 'path';
-import * as storage from 'electron-json-storage';
 import * as windowStateKeeper from 'electron-window-state';
 
 // import events from './functionality/events';
@@ -33,7 +30,7 @@ const createMainWindow = (): void => {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true
-    },
+    }
   });
 
   // and load the index.html of the app.
@@ -174,8 +171,8 @@ ipcMain.on('video-ended', () => {
   mainWindow.webContents.send('video-ended');
 });
 
-ipcMain.on('webcam:start', () => {
-  chromaWindow && chromaWindow.webContents.send('webcam:start');
+ipcMain.on('webcam:start', (event, deviceId) => {
+  chromaWindow && chromaWindow.webContents.send('webcam:start', deviceId);
 });
 
 ipcMain.on('webcam:stop', () => {
@@ -195,6 +192,15 @@ ipcMain.on('commentator-names-update', (event, names) => {
   chromaWindow && chromaWindow.webContents.send('commentator-names-update', names);
   event.sender.send('comms:updated', names);
 });
+
+ipcMain.on('scoreboard:show', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:show');
+});
+
+ipcMain.on('scoreboard:hide', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:hide');
+});
+
 
 // Choose Logo File
 ipcMain.on('bug:choose', (event) => {
@@ -284,3 +290,34 @@ ipcMain.on('overlay:updated', (event, paths) => {
 
 //  return addImages(filesArray);
 });
+
+// Webcam
+ipcMain.on('webcam:select', (event, deviceId) => {
+  chromaWindow && chromaWindow.webContents.send('webcam:updated', deviceId);
+  event.sender.send('webcam:updated', deviceId);
+});
+
+// Scoreboard
+
+ipcMain.on('scoreboard:updated', (event, settings) => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:updated', settings);
+  event.sender.send('scoreboard:updated', settings);
+});
+
+ipcMain.on('scoreboard:point:red', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:point:red');
+});
+
+ipcMain.on('scoreboard:point:blue', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:point:blue');
+});
+
+ipcMain.on('scoreboard:reset', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:reset');
+});
+
+// Team Names
+ipcMain.on('teams:updated', (event, teamNames) => {
+  chromaWindow && chromaWindow.webContents.send('teams:updated', teamNames);
+  event.sender.send('teams:updated', teamNames);
+})

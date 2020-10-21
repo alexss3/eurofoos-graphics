@@ -101,9 +101,19 @@
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
                 data-state="off"
               >
-                <i class="material-icons large">video_call</i>
+                <i class="material-icons large">videocam</i>
               </button>
               <span class="cp-button-caption">Webcam</span>
+            </div>
+            <div class="col s1 button-wrapper">
+              <button
+                id="scoreboard-toggle"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">iso</i>
+              </button>
+              <span class="cp-button-caption">Scoreboard</span>
             </div>
 
           </div>
@@ -241,6 +251,88 @@
           </div>
         </div>
 
+        <!-- Webcam Settings Page -->
+        <div id="page-webcam" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Webcam Settings</h3></div>
+            <div class="col s1"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10">
+              <label>Select Webcam Device</label>
+              <select id="select-webcam" class="browser-default">
+                <option value="" disabled selected>Choose webcam</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scoreboard Settings Page -->
+        <div id="page-scoreboard" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Scoreboard Settings</h3></div>
+            <div class="col s1"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s2">
+              <label>Points to Win</label>
+              <select id="scoreboard-points-set" class="browser-default">
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+
+            <div class="col s2">
+              <label>Max Points (last set)</label>
+              <select id="scoreboard-max-points" class="browser-default">
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+
+            <div class="col s2">
+              <label>Best of Sets</label>
+              <select id="scoreboard-best-of" class="browser-default">
+                <option value="3">3</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row"></div>
+
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s4">
+              <input type="text" id="red-team-name" class="grey-text" placeholder="Red Team Name">
+            </div>
+            <div class="col s4">
+              <input type="text" id="blue-team-name" class="grey-text" placeholder="Blue Team Name">
+            </div>
+            <div class="col s1">
+              <button
+                class="btn waves-effect waves-light"
+                id="scoreboard-names-update"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </div>
     </main>
     <footer>
       <nav class="page-footer grey-text">
@@ -251,6 +343,8 @@
             <li data-state="off" id="bottom-nav-video"><a href="#"><i class="material-icons small">ondemand_video</i><span>Videos</span></a></li>
             <li data-state="off" id="bottom-nav-comm"><a href="#"><i class="material-icons small">headset_mic</i><span>Comm.</span></a></li>
             <li data-state="off" id="bottom-nav-overlay"><a href="#"><i class="material-icons small">insert_photo</i><span>Overlays</span></a></li>
+            <li data-state="off" id="bottom-nav-webcam"><a href="#"><i class="material-icons small">videocam</i><span>Webcam</span></a></li>
+            <li data-state="off" id="bottom-nav-scoreboard"><a href="#"><i class="material-icons small">iso</i><span>Scoreboard</span></a></li>
           </ul>
         </div>
       </nav>

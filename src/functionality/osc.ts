@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import * as OSC from 'osc-js';
 
 const osc = new OSC({
@@ -36,4 +37,16 @@ osc.on('/eurofooslive/show-comms', () => {
 
 osc.on('/eurofooslive/show-webcam', () => {
   document.getElementById('webcam-toggle').click();
+});
+
+osc.on('/eurofooslive/red/point', () => {
+  ipcRenderer.send('scoreboard:point:red');
+});
+
+osc.on('/eurofooslive/blue/point', () => {
+  ipcRenderer.send('scoreboard:point:blue');
+});
+
+osc.on('/eurofooslive/scoreboard/reset', () => {
+  ipcRenderer.send('scoreboard:reset');
 });

@@ -9,21 +9,28 @@
   </head>
   <body>
     <div id="chroma">
+
+      <!-- Video Overlay -->
       <video
         id="video-container"
         class="video"
         src=""
       ></video>
 
+      <!-- Webcam -->
       <video src="" id="webcam-container" class="webcam"></video>
 
+      <!-- Image Overlay -->
       <div id="image-overlay">
         <img src="" alt="" />
       </div>
 
+      <!-- Bug -->
       <div id="bug">
           <img id="bug-image" src="" />
       </div>
+
+      <!-- Commentator Names -->
       <div id="commentators">
         <div id="commentators_transition" class="commentators__transition">
           <div id="commentator-title-one" class="commentator-name">
@@ -38,6 +45,30 @@
           </div>
         </div>
       </div>
+
+      <!-- Scoreboard -->
+      <div id="scoreboard">
+        <div id="labels">
+          <div id="discipline">Open Singles</div>
+          <div id="points">Points</div>
+          <div id="sets">Sets</div>
+          <div id="timeouts">Timeouts</div>
+        </div>
+        <div id="red-team">
+          <div id="red-team-name" class="team-name"></div>
+          <div id="red-team-points" class="team-points"></div>
+          <div id="red-team-sets" class="team-sets"></div>
+          <div id="red-team-timeouts" class="team-timeouts"></div>
+        </div>
+
+        <div id="blue-team">
+          <div id="blue-team-name" class="team-name"></div>
+          <div id="blue-team-points" class="team-points"></div>
+          <div id="blue-team-sets" class="team-sets"></div>
+          <div id="blue-team-timeouts" class="team-timeouts"></div>
+        </div>
+      </div>
+
     </div>
     <script>
       require('../../dist/windows/chroma.js');
@@ -45,6 +76,7 @@
       require('../../dist/components/video.js');
       require('../../dist/components/webcam.js');
       require('../../dist/components/commentators.js');
+      require('../../dist/components/scoreboard.js');
     </script>
   </body>
 </html>

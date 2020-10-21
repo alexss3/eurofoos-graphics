@@ -25,10 +25,10 @@ main {
 
 #footer-nav {
   float: none;
-  position: absolute;
-  /* top: -18%; */
+  /* position: absolute;
+  top: -18%;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 0); */
   height: 64px;
 }
 

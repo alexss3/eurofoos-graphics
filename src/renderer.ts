@@ -18,7 +18,6 @@ bottomNavButtons.forEach((button) => {
     pagesArray.forEach((page, index) => {
       const btnId = button.parentElement.id;
       const btnMatch = 'page-' + btnId.split('bottom-nav-')[1];
-      console.log(btnMatch);
 
       if (`${page.id}` !== btnMatch) {
         // hide
@@ -133,28 +132,7 @@ ipcRenderer.on('video-ended', () => {
 
 });
 
-// WEBCAM
-const webcamButton = document.getElementById('webcam-toggle');
 
-webcamButton.addEventListener('click', (e) => {
-  e.preventDefault();
-  const state = webcamButton.getAttribute('data-state');
-  if (state === 'off') {
-    ipcRenderer.send('webcam:start');
-    webcamButton.setAttribute('data-state', 'on');
-    webcamButton.classList.remove('green');
-    webcamButton.classList.add('red');
-    webcamButton.classList.add('pulse');
-
-  } else {
-    ipcRenderer.send('webcam:stop');
-    webcamButton.setAttribute('data-state', 'off');
-    webcamButton.classList.add('green');
-    webcamButton.classList.remove('red');
-    webcamButton.classList.remove('pulse');
-
-  }
-});
 
 // ipcRenderer.on('video-ended', () => {
 //   webcamButton.setAttribute('data-state', 'off');
@@ -219,4 +197,120 @@ chooseOverlayButton.addEventListener('click', () => {
 
 ipcRenderer.on('overlay:chosen', (event, paths) => {
   ipcRenderer.send('overlay:updated', paths);
+});
+
+
+// WEBCAM
+const webcamButton = document.getElementById('webcam-toggle');
+const webcamSelect: any = document.getElementById('select-webcam');
+
+navigator.mediaDevices.enumerateDevices()
+  .then(devices => {
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    videoDevices.forEach(device => {
+      webcamSelect.appendChild(new Option(device.label, device.deviceId));
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
+webcamButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  const state = webcamButton.getAttribute('data-state');
+  if (state === 'off') {
+    ipcRenderer.send('webcam:start', webcamSelect.value);
+    webcamButton.setAttribute('data-state', 'on');
+    webcamButton.classList.remove('green');
+    webcamButton.classList.add('red');
+    webcamButton.classList.add('pulse');
+
+  } else {
+    ipcRenderer.send('webcam:stop');
+    webcamButton.setAttribute('data-state', 'off');
+    webcamButton.classList.add('green');
+    webcamButton.classList.remove('red');
+    webcamButton.classList.remove('pulse');
+  }
+});
+
+webcamSelect.addEventListener('change', (e: any) => {
+  ipcRenderer.send('webcam:select', e.target.value);
+});
+
+ipcRenderer.on('webcam:select', (event, deviceId) => {
+  webcamSelect.value = deviceId;
+});
+
+// SCOREBOARD
+
+const scoreboardButton = document.getElementById('scoreboard-toggle');
+
+scoreboardButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  const state = scoreboardButton.getAttribute('data-state');
+  if (state === 'off') {
+    ipcRenderer.send('scoreboard:show');
+    scoreboardButton.setAttribute('data-state', 'on');
+    scoreboardButton.classList.remove('green');
+    scoreboardButton.classList.add('red');
+    scoreboardButton.classList.add('pulse');
+
+  } else {
+    ipcRenderer.send('scoreboard:hide');
+    scoreboardButton.setAttribute('data-state', 'off');
+    scoreboardButton.classList.add('green');
+    scoreboardButton.classList.remove('red');
+    scoreboardButton.classList.remove('pulse');
+  }
+});
+
+
+const pointsInSetSelect: any = document.getElementById('scoreboard-points-set');
+const maxPointsSelect: any = document.getElementById('scoreboard-max-points');
+const bestOfSelect: any = document.getElementById('scoreboard-best-of');
+
+const redTeamName: any = document.getElementById('red-team-name');
+const blueTeamName: any = document.getElementById('blue-team-name');
+
+const updateScoreboardButton = document.getElementById('scoreboard-names-update');
+
+const returnCurrentScoreboardSettings = (): {} => {
+  return {
+    pointsInSet: pointsInSetSelect.value,
+    maxPoints: maxPointsSelect.value,
+    bestOfSets: bestOfSelect.value
+  };
+};
+
+pointsInSetSelect.addEventListener('change', () => {
+  ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
+});
+
+maxPointsSelect.addEventListener('change', () => {
+  ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
+});
+
+bestOfSelect.addEventListener('change', () => {
+  ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
+});
+
+// This sets the select fields to the right values
+ipcRenderer.on('scoreboard:updated', (event, settings) => {
+  pointsInSetSelect.value = settings.pointsInSet;
+  maxPointsSelect.value = settings.maxPoints;
+  bestOfSelect.value = settings.bestOfSets;
+});
+
+updateScoreboardButton.addEventListener('click', () => {
+  const teamNames = {
+    redTeam: redTeamName.value,
+    blueTeam: blueTeamName.value
+  };
+  ipcRenderer.send('teams:updated', teamNames);
+});
+
+ipcRenderer.on('teams:updated', (event, teamNames) => {
+  redTeamName.value = teamNames.redTeam;
+  blueTeamName.value = teamNames.blueTeam;
 });

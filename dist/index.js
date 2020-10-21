@@ -133,8 +133,8 @@ electron_1.ipcMain.on('video-stop', function () {
 electron_1.ipcMain.on('video-ended', function () {
     mainWindow.webContents.send('video-ended');
 });
-electron_1.ipcMain.on('webcam:start', function () {
-    chromaWindow && chromaWindow.webContents.send('webcam:start');
+electron_1.ipcMain.on('webcam:start', function (event, deviceId) {
+    chromaWindow && chromaWindow.webContents.send('webcam:start', deviceId);
 });
 electron_1.ipcMain.on('webcam:stop', function () {
     chromaWindow && chromaWindow.webContents.send('webcam:stop');
@@ -148,6 +148,12 @@ electron_1.ipcMain.on('commentators-hide', function () {
 electron_1.ipcMain.on('commentator-names-update', function (event, names) {
     chromaWindow && chromaWindow.webContents.send('commentator-names-update', names);
     event.sender.send('comms:updated', names);
+});
+electron_1.ipcMain.on('scoreboard:show', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:show');
+});
+electron_1.ipcMain.on('scoreboard:hide', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:hide');
 });
 // Choose Logo File
 electron_1.ipcMain.on('bug:choose', function (event) {
@@ -219,5 +225,29 @@ electron_1.ipcMain.on('overlay:updated', function (event, paths) {
     //     filesArray.push(imagePath);
     //   });
     //  return addImages(filesArray);
+});
+// Webcam
+electron_1.ipcMain.on('webcam:select', function (event, deviceId) {
+    chromaWindow && chromaWindow.webContents.send('webcam:updated', deviceId);
+    event.sender.send('webcam:updated', deviceId);
+});
+// Scoreboard
+electron_1.ipcMain.on('scoreboard:updated', function (event, settings) {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:updated', settings);
+    event.sender.send('scoreboard:updated', settings);
+});
+electron_1.ipcMain.on('scoreboard:point:red', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:point:red');
+});
+electron_1.ipcMain.on('scoreboard:point:blue', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:point:blue');
+});
+electron_1.ipcMain.on('scoreboard:reset', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:reset');
+});
+// Team Names
+electron_1.ipcMain.on('teams:updated', function (event, teamNames) {
+    chromaWindow && chromaWindow.webContents.send('teams:updated', teamNames);
+    event.sender.send('teams:updated', teamNames);
 });
 //# sourceMappingURL=index.js.map

@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import * as storage from 'electron-json-storage';
 import * as os from 'os';
 import { ConfigData } from '../helpers/interfaces';
-import { config } from '../config/config';
+import { Config } from '../config/config';
 
 const chromaWindow = document.getElementById('chroma');
 
@@ -37,7 +37,7 @@ ipcRenderer.on('commentator-names-update', (e, names) => {
 const updateBug = (path: string): void => {
   const bugEl: any = document.getElementById('bug-image');
   bugEl.src = path.split('file:')[1];
-}
+};
 
 ipcRenderer.on('bug:updated', (event, path) => {
   updateBug(path);
@@ -45,22 +45,43 @@ ipcRenderer.on('bug:updated', (event, path) => {
 
 // Video
 
-const updateVideo = (path: string):void => {
+const updateVideo = (path: string): void => {
   const videoEl: any = document.getElementById('video-container');
   videoEl.src = path.split('file:')[1];
-}
+};
 
 ipcRenderer.on('video:updated', (event, path) => {
   updateVideo(path);
 });
 
+// Webcam
+
+const updateWebcam = (deviceId: string): void => {
+  ipcRenderer.send('webcam:select', deviceId);
+};
+
+// Scoreboard
+const updateScoreboard = (settings: any): void => {
+  ipcRenderer.send('scoreboard:updated', settings);
+};
+
+// Team Names
+const updateTeamNames = (teamNames: any): void => {
+  ipcRenderer.send('teams:updated', teamNames);
+};
+
+
 // Load settings from config file
 
 storage.setDataPath(os.homedir());
 
-storage.get(config.settings.key, (err, data: ConfigData) => {
+storage.get(Config.settings.key, (err, data: ConfigData) => {
   if (err) console.error(err);
   updateBug(data.bug.path);
   updateVideo(data.video.path);
   updateCommNames(data.commentators);
+  updateWebcam(data.webcam.device);
+  updateScoreboard(data.scoreboard);
+  updateTeamNames(data.teamNames);
 });
+
