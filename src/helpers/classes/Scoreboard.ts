@@ -40,7 +40,6 @@ export default class Scoreboard {
 
         // Check if last set or not
         if (this.match.checkIfLastSet()) {
-            console.log('Last set...');
             newTeamPoints += 1;
 
             if (newTeamPoints >= this.match.pointsInSet) {
@@ -57,32 +56,28 @@ export default class Scoreboard {
 
             // All other sets
             if (newTeamPoints === this.match.pointsInSet) {
-                console.log(`${teamPointer.title} won this set`);
                 newSets += 1;
 
                 if (newSets !== this.match.winningSets) {
-                    console.log('Resetting points to 0');
                     newTeamPoints = 0;
                 } else {
                     // end match
-                    console.log('Ending the match');
                     this.match.endMatch();
                 }
             }
         }
 
         if (newSets > teamPointer.sets) {
-            console.log('Adding a set');
             teamPointer.sets = newSets;
             this.match.addSet();
             if (this.match.currentSet < this.match.bestOfSets) {
                 this.resetPoints();
+                this.resetTimeouts();
             }
         }
 
         if (newTeamPoints > teamPointer.points || newTeamPoints === 0) {
             // Add a point
-            console.log('Adding a point');
             teamPointer.points = newTeamPoints;
         }
     }
@@ -126,7 +121,7 @@ export default class Scoreboard {
     subtractPoint(team: string): {} {
         const teamPointer = this.returnTeamFromString(team);
         if (teamPointer.points > 0) {
-            teamPointer.points += 1;
+            teamPointer.points -= 1;
         }
         return this.returnTeamObjects();
     }

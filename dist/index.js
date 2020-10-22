@@ -246,6 +246,18 @@ electron_1.ipcMain.on('scoreboard:point:red', function () {
 electron_1.ipcMain.on('scoreboard:point:blue', function () {
     chromaWindow && chromaWindow.webContents.send('scoreboard:point:blue');
 });
+electron_1.ipcMain.on('scoreboard:sub:red', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:sub:red');
+});
+electron_1.ipcMain.on('scoreboard:sub:blue', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:sub:blue');
+});
+electron_1.ipcMain.on('scoreboard:timeout:red', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:timeout:red');
+});
+electron_1.ipcMain.on('scoreboard:timeout:blue', function () {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:timeout:blue');
+});
 electron_1.ipcMain.on('scoreboard:reset', function () {
     chromaWindow && chromaWindow.webContents.send('scoreboard:reset');
 });

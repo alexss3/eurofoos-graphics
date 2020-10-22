@@ -317,6 +317,22 @@ ipcMain.on('scoreboard:point:blue', () => {
   chromaWindow && chromaWindow.webContents.send('scoreboard:point:blue');
 });
 
+ipcMain.on('scoreboard:sub:red', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:sub:red');
+});
+
+ipcMain.on('scoreboard:sub:blue', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:sub:blue');
+});
+
+ipcMain.on('scoreboard:timeout:red', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:timeout:red');
+});
+
+ipcMain.on('scoreboard:timeout:blue', () => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:timeout:blue');
+});
+
 ipcMain.on('scoreboard:reset', () => {
   chromaWindow && chromaWindow.webContents.send('scoreboard:reset');
 });

@@ -7,7 +7,7 @@ import gsap from 'gsap';
 
 // Handle showing/hiding the scoreboard
 const scoreboardWrapper = document.getElementById('scoreboard');
-const scoreboardDiscipline = document.getElementById('discipline');
+const scoreboardDiscipline = document.querySelector('#discipline span');
 
 ipcRenderer.on('scoreboard:show', () => {
     scoreboardWrapper.style.display = 'block';
@@ -34,20 +34,20 @@ ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
 });
 
 // Names
-const redTeamName: any = document.getElementById('red-team-name');
-const blueTeamName: any = document.getElementById('blue-team-name');
+const redTeamName: any = document.querySelector('#red-team-name span');
+const blueTeamName: any = document.querySelector('#blue-team-name span');
 
 // Points
-const redTeamPoints: any = document.getElementById('red-team-points');
-const blueTeamPoints: any = document.getElementById('blue-team-points');
+const redTeamPoints: any = document.querySelector('#red-team-points span');
+const blueTeamPoints: any = document.querySelector('#blue-team-points span');
 
 // Sets
-const redTeamSets: any = document.getElementById('red-team-sets');
-const blueTeamSets: any = document.getElementById('blue-team-sets');
+const redTeamSets: any = document.querySelector('#red-team-sets span');
+const blueTeamSets: any = document.querySelector('#blue-team-sets span');
 
 // Timeouts
-const redTeamTimeouts: any = document.getElementById('red-team-timeouts');
-const blueTeamTimeouts: any = document.getElementById('blue-team-timeouts');
+const redTeamTimeouts: any = document.querySelector('#red-team-timeouts span');
+const blueTeamTimeouts: any = document.querySelector('#blue-team-timeouts span');
 
 
 const updateTeamNames = (teamNames: any): void => {
@@ -110,6 +110,26 @@ storage.get(configKey, (err, data: ConfigData) => {
     
     ipcRenderer.on('scoreboard:point:blue', () => {
         scoreboard.addPoint('blue');
+        updateAllValues(scoreboard);
+    });
+
+    ipcRenderer.on('scoreboard:sub:red', () => {
+        scoreboard.subtractPoint('red');
+        updateAllValues(scoreboard);
+    });
+    
+    ipcRenderer.on('scoreboard:sub:blue', () => {
+        scoreboard.subtractPoint('blue');
+        updateAllValues(scoreboard);
+    });
+
+    ipcRenderer.on('scoreboard:timeout:red', () => {
+        scoreboard.callTimeout('red');
+        updateAllValues(scoreboard);
+    });
+    
+    ipcRenderer.on('scoreboard:timeout:blue', () => {
+        scoreboard.callTimeout('blue');
         updateAllValues(scoreboard);
     });
     

@@ -47,6 +47,22 @@ osc.on('/eurofooslive/blue/point', () => {
   ipcRenderer.send('scoreboard:point:blue');
 });
 
+osc.on('/eurofooslive/red/sub', () => {
+  ipcRenderer.send('scoreboard:sub:red');
+});
+
+osc.on('/eurofooslive/blue/sub', () => {
+  ipcRenderer.send('scoreboard:sub:blue');
+});
+
+osc.on('/eurofooslive/red/timeout', () => {
+  ipcRenderer.send('scoreboard:timeout:red');
+});
+
+osc.on('/eurofooslive/blue/timeout', () => {
+  ipcRenderer.send('scoreboard:timeout:blue');
+});
+
 osc.on('/eurofooslive/scoreboard/reset', () => {
   ipcRenderer.send('scoreboard:reset');
 });
