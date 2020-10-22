@@ -18,6 +18,7 @@ export interface ConfigData {
         maxPoints: number;
         bestOfSets: number;
     };
+    discipline: string;
     teamNames: {
         redTeam: string;
         blueTeam: string;

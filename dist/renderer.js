@@ -215,6 +215,7 @@ scoreboardButton.addEventListener('click', function (e) {
 var pointsInSetSelect = document.getElementById('scoreboard-points-set');
 var maxPointsSelect = document.getElementById('scoreboard-max-points');
 var bestOfSelect = document.getElementById('scoreboard-best-of');
+var disciplineSelect = document.getElementById('scoreboard-discipline');
 var redTeamName = document.getElementById('red-team-name');
 var blueTeamName = document.getElementById('blue-team-name');
 var updateScoreboardButton = document.getElementById('scoreboard-names-update');
@@ -234,11 +235,17 @@ maxPointsSelect.addEventListener('change', function () {
 bestOfSelect.addEventListener('change', function () {
     electron_1.ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
 });
+disciplineSelect.addEventListener('change', function () {
+    electron_1.ipcRenderer.send('scoreboard:discipline:updated', disciplineSelect.value);
+});
 // This sets the select fields to the right values
 electron_1.ipcRenderer.on('scoreboard:updated', function (event, settings) {
     pointsInSetSelect.value = settings.pointsInSet;
     maxPointsSelect.value = settings.maxPoints;
     bestOfSelect.value = settings.bestOfSets;
+});
+electron_1.ipcRenderer.on('scoreboard:discipline:updated', function (event, disc) {
+    disciplineSelect.value = disc;
 });
 updateScoreboardButton.addEventListener('click', function () {
     var teamNames = {

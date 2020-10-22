@@ -21,6 +21,7 @@ const initialData: ConfigData = {
     maxPoints: undefined,
     bestOfSets: undefined
   },
+  discipline: 'Open Singles',
   teamNames: {
     redTeam: 'Red Team',
     blueTeam: 'Blue Team'
@@ -41,6 +42,7 @@ const updateFromConfigData = (data: ConfigData): void => {
   rendererProcess.webContents.send('comms:updated', data.commentators);
   rendererProcess.webContents.send('webcam:select', data.webcam.device);
   rendererProcess.webContents.send('scoreboard:updated', data.scoreboard);
+  rendererProcess.webContents.send('scoreboard:discipline:updated', data.discipline);
   rendererProcess.webContents.send('teams:updated', data.teamNames);
 };
 
@@ -97,6 +99,11 @@ ipcRenderer.on('scoreboard:updated', (event, settings) => {
     maxPoints: parseInt(settings.maxPoints),
     bestOfSets: parseInt(settings.bestOfSets)
   };
+  updateSettingsFile(initialData);
+});
+
+ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
+  initialData.discipline = disc;
   updateSettingsFile(initialData);
 });
 

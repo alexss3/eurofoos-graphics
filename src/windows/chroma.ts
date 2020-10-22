@@ -65,6 +65,10 @@ const updateScoreboard = (settings: any): void => {
   ipcRenderer.send('scoreboard:updated', settings);
 };
 
+const updateDiscipline = (disc: string): void => {
+  ipcRenderer.send('scoreboard:discipline:updated', disc);
+}
+
 // Team Names
 const updateTeamNames = (teamNames: any): void => {
   ipcRenderer.send('teams:updated', teamNames);
@@ -83,5 +87,6 @@ storage.get(Config.settings.key, (err, data: ConfigData) => {
   updateWebcam(data.webcam.device);
   updateScoreboard(data.scoreboard);
   updateTeamNames(data.teamNames);
+  updateDiscipline(data.discipline);
 });
 

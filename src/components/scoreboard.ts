@@ -3,16 +3,34 @@ import { MatchSettings, ConfigData } from '../helpers/interfaces';
 import * as storage from 'electron-json-storage';
 import { Config } from '../config/config';
 import { ipcRenderer } from 'electron';
+import gsap from 'gsap';
 
 // Handle showing/hiding the scoreboard
 const scoreboardWrapper = document.getElementById('scoreboard');
+const scoreboardDiscipline = document.getElementById('discipline');
 
 ipcRenderer.on('scoreboard:show', () => {
     scoreboardWrapper.style.display = 'block';
+    gsap.timeline()
+        .to('#scoreboard', {
+            duration: 0.5,
+            ease: "sine.out",
+            top: '75%'
+        });
 });
 
 ipcRenderer.on('scoreboard:hide', () => {
-    scoreboardWrapper.style.display = 'none';
+    gsap.timeline()
+    .to('#scoreboard', {
+        duration: 0.5,
+        ease: "sine.out",
+        top: '130%'
+    });
+    // scoreboardWrapper.style.display = 'none';
+});
+
+ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
+    scoreboardDiscipline.innerHTML = disc;
 });
 
 // Names

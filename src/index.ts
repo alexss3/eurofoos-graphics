@@ -304,6 +304,11 @@ ipcMain.on('scoreboard:updated', (event, settings) => {
   event.sender.send('scoreboard:updated', settings);
 });
 
+ipcMain.on('scoreboard:discipline:updated', (event, disc) => {
+  chromaWindow && chromaWindow.webContents.send('scoreboard:discipline:updated', disc);
+  event.sender.send('scoreboard:discipline:updated', disc);
+});
+
 ipcMain.on('scoreboard:point:red', () => {
   chromaWindow && chromaWindow.webContents.send('scoreboard:point:red');
 });

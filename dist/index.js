@@ -236,6 +236,10 @@ electron_1.ipcMain.on('scoreboard:updated', function (event, settings) {
     chromaWindow && chromaWindow.webContents.send('scoreboard:updated', settings);
     event.sender.send('scoreboard:updated', settings);
 });
+electron_1.ipcMain.on('scoreboard:discipline:updated', function (event, disc) {
+    chromaWindow && chromaWindow.webContents.send('scoreboard:discipline:updated', disc);
+    event.sender.send('scoreboard:discipline:updated', disc);
+});
 electron_1.ipcMain.on('scoreboard:point:red', function () {
     chromaWindow && chromaWindow.webContents.send('scoreboard:point:red');
 });
