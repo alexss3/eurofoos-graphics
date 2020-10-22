@@ -119,19 +119,23 @@ export default class Scoreboard {
 
     // Subtract Point
     subtractPoint(team: string): {} {
-        const teamPointer = this.returnTeamFromString(team);
-        if (teamPointer.points > 0) {
-            teamPointer.points -= 1;
+        if (this.match.inProgress) {
+            const teamPointer = this.returnTeamFromString(team);
+            if (teamPointer.points > 0) {
+                teamPointer.points -= 1;
+            }
         }
         return this.returnTeamObjects();
     }
 
     // Subtract Set
     subtractSet(team: string): {} {
-        const teamPointer = this.returnTeamFromString(team);
-        if (teamPointer.sets > 0) {
-            teamPointer.sets -= 1;
-            this.match.subtractSet();
+        if (this.match.inProgress) {
+            const teamPointer = this.returnTeamFromString(team);
+            if (teamPointer.sets > 0) {
+                teamPointer.sets -= 1;
+                this.match.subtractSet();
+            }
         }
         return this.returnTeamObjects();
     }
