@@ -138,8 +138,9 @@ storage.get(configKey, (err, data: ConfigData) => {
         updateAllValues(scoreboard);
     });
 
-    // TODO
-    // listen for names update
+    ipcRenderer.on('teams:updated', (event, teamNames) => {
+        updateTeamNames(teamNames);
+    });
 
 });
 
