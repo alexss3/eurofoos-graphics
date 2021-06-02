@@ -43,7 +43,7 @@ const updateFromConfigData = (data: ConfigData): void => {
   rendererProcess.webContents.send('webcam:select', data.webcam.device);
   rendererProcess.webContents.send('scoreboard:updated', data.scoreboard);
   rendererProcess.webContents.send('scoreboard:discipline:updated', data.discipline);
-  rendererProcess.webContents.send('teams:updated', data.teamNames);
+  rendererProcess.webContents.send(Config.events.TEAMS_UPDATED, data.teamNames);
 };
 
 const updateSettingsFile = (data: ConfigData): void => {
@@ -107,7 +107,8 @@ ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
   updateSettingsFile(initialData);
 });
 
-ipcRenderer.on('teams:updated', (event, teamNames) => {
+ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
+  console.log('Storage will update team names');
   initialData.teamNames = teamNames;
   updateSettingsFile(initialData);
 });

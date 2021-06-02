@@ -54,6 +54,10 @@ ipcRenderer.on('video:updated', (event, path) => {
   updateVideo(path);
 });
 
+ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
+  updateTeamNames(teamNames);
+});
+
 // Webcam
 
 const updateWebcam = (deviceId: string): void => {
@@ -71,7 +75,12 @@ const updateDiscipline = (disc: string): void => {
 
 // Team Names
 const updateTeamNames = (teamNames: any): void => {
-  ipcRenderer.send('teams:updated', teamNames);
+  // ipcRenderer.send('teams:updated', teamNames);
+  const redTeamName: any = document.querySelector('#red-team-name');
+  const blueTeamName: any = document.querySelector('#blue-team-name');
+
+  redTeamName.innerHTML = teamNames.redTeam;
+  blueTeamName.innerHTML = teamNames.blueTeam;
 };
 
 
@@ -85,8 +94,8 @@ storage.get(Config.settings.key, (err, data: ConfigData) => {
   updateVideo(data.video.path);
   updateCommNames(data.commentators);
   updateWebcam(data.webcam.device);
-  updateScoreboard(data.scoreboard);
+  // updateScoreboard(data.scoreboard);
   updateTeamNames(data.teamNames);
-  updateDiscipline(data.discipline);
+  // updateDiscipline(data.discipline);
 });
 

@@ -5,11 +5,15 @@ import {
   dialog,
   powerSaveBlocker,
   OpenDialogOptions,
-  Menu
+  Menu,
+  session,
+  systemPreferences,
+  desktopCapturer
 } from 'electron';
 
 import * as path from 'path';
 import * as windowStateKeeper from 'electron-window-state';
+import { Config } from './config/config';
 
 // import events from './functionality/events';
 
@@ -21,6 +25,8 @@ if (require('electron-squirrel-startup')) {
 
 let mainWindow: BrowserWindow | null;
 let chromaWindow: BrowserWindow | null;
+
+let mainSession;
 
 const createMainWindow = (): void => {
   // Create the browser window.
@@ -35,6 +41,34 @@ const createMainWindow = (): void => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
+
+  mainSession = mainWindow.webContents.session;
+
+  // console.log(mainSession);
+
+  // mainSession.setPermissionRequestHandler((webContents, permission, callback, details) => {
+  //   console.log(permission);
+  //   console.log(details);
+  //   callback(true);
+  // });
+
+  // mainSession.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
+  //   console.log(permission);
+  //   console.log(requestingOrigin);
+  //   console.log(details);
+  //   return true;
+  // });
+
+  
+
+  // desktopCapturer.getSources({ types: ['camera', 'screen'] })
+  //   .then( sources => {
+  //     console.log(sources);
+
+  //   })
+  //   .catch (e => {
+  //     console.log(e);
+  //   });
 
 };
 
@@ -113,6 +147,23 @@ const initialSetup = (): void => {
   createMainWindow();
   // Create menus
   // createMenus();
+
+  // systemPreferences.askForMediaAccess('camera')
+  //   .then(value => {
+  //     console.log(value);
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+  // console.log();
+
+
+  // session.fromPartition('test').setPermissionRequestHandler((webContents, permissions, callback) => {
+  //   console.log(webContents.getURL());
+  //   console.log(permissions);
+
+  //   callback(true);
+  // });
 };
 
 // This method will be called when Electron has finished
@@ -172,6 +223,13 @@ ipcMain.on('video-ended', () => {
 });
 
 ipcMain.on('webcam:start', (event, deviceId) => {
+  systemPreferences.askForMediaAccess('camera')
+    .then(access => {
+      console.log("Access: ", access);
+    })
+    .catch(err => {
+      console.log(err);
+    });
   chromaWindow && chromaWindow.webContents.send('webcam:start', deviceId);
 });
 
@@ -338,7 +396,8 @@ ipcMain.on('scoreboard:reset', () => {
 });
 
 // Team Names
-ipcMain.on('teams:updated', (event, teamNames) => {
-  chromaWindow && chromaWindow.webContents.send('teams:updated', teamNames);
-  event.sender.send('teams:updated', teamNames);
-})
+ipcMain.on(Config.actions.TEAMS_UPDATE, (event, teamNames) => {
+  console.log('Call to update team names');
+  chromaWindow && chromaWindow.webContents.send(Config.events.TEAMS_UPDATED, teamNames);
+  event.sender.send(Config.events.TEAMS_UPDATED, teamNames);
+});

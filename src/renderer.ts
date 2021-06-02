@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import { Config } from './config/config';
 
 // CHROMA WINDOW
 const launchChromaButton = document.getElementById('launch-chroma-btn');
@@ -312,14 +313,16 @@ ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
 });
 
 updateScoreboardButton.addEventListener('click', () => {
+  console.log('Clicked update button');
   const teamNames = {
     redTeam: redTeamName.value,
     blueTeam: blueTeamName.value
   };
-  ipcRenderer.send('teams:updated', teamNames);
+  ipcRenderer.send(Config.actions.TEAMS_UPDATE, teamNames);
 });
 
-ipcRenderer.on('teams:updated', (event, teamNames) => {
+ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
+  console.log('Updating UI');
   redTeamName.value = teamNames.redTeam;
   blueTeamName.value = teamNames.blueTeam;
 });
