@@ -44,32 +44,6 @@ const createMainWindow = (): void => {
 
   mainSession = mainWindow.webContents.session;
 
-  // console.log(mainSession);
-
-  // mainSession.setPermissionRequestHandler((webContents, permission, callback, details) => {
-  //   console.log(permission);
-  //   console.log(details);
-  //   callback(true);
-  // });
-
-  // mainSession.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
-  //   console.log(permission);
-  //   console.log(requestingOrigin);
-  //   console.log(details);
-  //   return true;
-  // });
-
-  
-
-  // desktopCapturer.getSources({ types: ['camera', 'screen'] })
-  //   .then( sources => {
-  //     console.log(sources);
-
-  //   })
-  //   .catch (e => {
-  //     console.log(e);
-  //   });
-
 };
 
 const createChromaWindow = (): void => {
@@ -145,25 +119,6 @@ const createMenus = (): void => {
 
 const initialSetup = (): void => {
   createMainWindow();
-  // Create menus
-  // createMenus();
-
-  // systemPreferences.askForMediaAccess('camera')
-  //   .then(value => {
-  //     console.log(value);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
-  // console.log();
-
-
-  // session.fromPartition('test').setPermissionRequestHandler((webContents, permissions, callback) => {
-  //   console.log(webContents.getURL());
-  //   console.log(permissions);
-
-  //   callback(true);
-  // });
 };
 
 // This method will be called when Electron has finished
@@ -264,7 +219,7 @@ ipcMain.on('scoreboard:hide', () => {
 ipcMain.on('bug:choose', (event) => {
   const options: OpenDialogOptions = {
     properties: ['openFile'],
-    filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
+    filters: [{ name: 'Images', extensions: Config.bug.formats }],
   };
 
   dialog
@@ -289,7 +244,7 @@ ipcMain.on('bug:updated', (event, path) => {
 ipcMain.on('video:choose', (event) => {
   const options: OpenDialogOptions = {
     properties: ['openFile'],
-    filters: [{ name: 'Movies', extensions: ['mov', 'mp4', 'avi', 'mpeg', 'mpg', 'mkv'] }],
+    filters: [{ name: 'Movies', extensions: Config.video.formats }],
   };
 
   dialog
@@ -313,7 +268,7 @@ ipcMain.on('video:updated', (event, path) => {
 ipcMain.on('overlay:add', (event) => {
   const options: OpenDialogOptions = {
     properties: ['openFile', 'multiSelections'],
-    filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
+    filters: [{ name: 'Images', extensions: Config.overlay.formats }],
   };
 
   dialog
@@ -330,23 +285,7 @@ ipcMain.on('overlay:add', (event) => {
 });
 
 ipcMain.on('overlay:updated', (event, paths) => {
-//   const filesArray = [];
-//   paths.forEach((path, index) => {
-//     let imagePath = `file:${path}`;
-//     let currentLength = document.querySelectorAll(".images_holder__image").length;
-//     let order;
-
-//     if (currentLength == 0) {
-//     order = index;
-//     } else {
-//     order = currentLength + index;
-//     }
-//     downloadImage(imagePath, order);
-
-//     filesArray.push(imagePath);
-//   });
-
-//  return addImages(filesArray);
+  console.log(paths);
 });
 
 // Webcam
@@ -397,7 +336,6 @@ ipcMain.on('scoreboard:reset', () => {
 
 // Team Names
 ipcMain.on(Config.actions.TEAMS_UPDATE, (event, teamNames) => {
-  console.log('Call to update team names');
   chromaWindow && chromaWindow.webContents.send(Config.events.TEAMS_UPDATED, teamNames);
   event.sender.send(Config.events.TEAMS_UPDATED, teamNames);
 });

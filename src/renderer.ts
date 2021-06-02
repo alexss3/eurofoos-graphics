@@ -133,17 +133,6 @@ ipcRenderer.on('video-ended', () => {
 
 });
 
-
-
-// ipcRenderer.on('video-ended', () => {
-//   webcamButton.setAttribute('data-state', 'off');
-//   webcamButton.classList.add('green');
-//   webcamButton.classList.remove('red');
-//   webcamButton.classList.remove('pulse');
-//   webcamButton.children[1].innerHTML = 'PLAY';
-// });
-
-
 // COMMENTATORS
 
 const commentatorsButton = document.getElementById('commentators-toggle');
@@ -313,7 +302,6 @@ ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
 });
 
 updateScoreboardButton.addEventListener('click', () => {
-  console.log('Clicked update button');
   const teamNames = {
     redTeam: redTeamName.value,
     blueTeam: blueTeamName.value
@@ -322,7 +310,6 @@ updateScoreboardButton.addEventListener('click', () => {
 });
 
 ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
-  console.log('Updating UI');
   redTeamName.value = teamNames.redTeam;
   blueTeamName.value = teamNames.blueTeam;
 });

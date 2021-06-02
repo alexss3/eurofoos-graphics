@@ -1,12 +1,26 @@
 import { ipcRenderer } from 'electron';
+import { Config } from '../config/config';
 
 let streamStarted = false;
 
 const webcamContainer: HTMLVideoElement = document.querySelector('#webcam-container');
 
+const buildConstraints = (deviceId: string): any => {
+    return {
+        'audio': Config.webcam.constraints.audio,
+        'video': {
+            'deviceId': deviceId,
+            'width': {
+                'min': Config.webcam.constraints.video.width
+            },
+            'height': {
+                'min': Config.webcam.constraints.video.height
+            }
+        }
+    };
+}
 
 const handleStream = (stream: any): void => {
-    console.log(stream);
     webcamContainer.srcObject = stream;
     webcamContainer.style.display = 'block';
     webcamContainer.play();
@@ -29,14 +43,7 @@ const stopWebcam = (): void => {
 
 ipcRenderer.on('webcam:select', (event, cameraId) => {
     if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
-        const constraints = {
-            'audio': true,
-            'video': {
-                'deviceId': cameraId,
-                'width': {'min': 1920},
-                'height': {'min': 1080}
-            }
-        }
+        const constraints = buildConstraints(cameraId);
         startStream(constraints);
     } else {
         console.log('Something weird happened');
@@ -50,19 +57,11 @@ ipcRenderer.on('webcam:start', (event, cameraId) => {
         return;
     }
     if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
-        const constraints = {
-            'audio': true,
-            'video': {
-                'deviceId': cameraId,
-                'width': {'min': 1920},
-                'height': {'min': 1080}
-            }
-        }
+        const constraints = buildConstraints(cameraId);
         startStream(constraints);
     } else {
         console.log("Can't start the stream");
     }
-    // startWebcam(cameraId);
 });
 
 ipcRenderer.on('webcam:stop', () => {

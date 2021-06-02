@@ -59,9 +59,7 @@ storage.has(key, (error, hasKey) => {
 
   if (hasKey) {
     storage.get(key, (error, data: ConfigData) => {
-      // console.log('Data loaded from config file', data);
       throwIfStorageError(error);
-
       updateFromConfigData(data);
     });
   } else {
@@ -108,7 +106,6 @@ ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
 });
 
 ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
-  console.log('Storage will update team names');
   initialData.teamNames = teamNames;
   updateSettingsFile(initialData);
 });

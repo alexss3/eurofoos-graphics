@@ -16,53 +16,55 @@ const osc = new OSC({
   }),
 });
 
+const ROOT_PATH = '/eurofooslive';
+
 osc.open();
 
 osc.on('open', () => {
   console.log(`OSC running on port ${osc.options.plugin.options.open.port}`);
 });
 
-osc.on('/eurofooslive/bug-toggle', () => {
+osc.on(ROOT_PATH + '/bug-toggle', () => {
   document.getElementById('bug-toggle').click();
 });
 
-osc.on('/eurofooslive/play-video', () => {
+osc.on(ROOT_PATH + '/play-video', () => {
   console.log('Playing the video...');
   document.getElementById('video-play').click();
 });
 
-osc.on('/eurofooslive/show-comms', () => {
+osc.on(ROOT_PATH + '/show-comms', () => {
   document.getElementById('commentators-toggle').click();
 });
 
-osc.on('/eurofooslive/show-webcam', () => {
+osc.on(ROOT_PATH + '/show-webcam', () => {
   document.getElementById('webcam-toggle').click();
 });
 
-osc.on('/eurofooslive/red/point', () => {
+osc.on(ROOT_PATH + '/red/point', () => {
   ipcRenderer.send('scoreboard:point:red');
 });
 
-osc.on('/eurofooslive/blue/point', () => {
+osc.on(ROOT_PATH + '/blue/point', () => {
   ipcRenderer.send('scoreboard:point:blue');
 });
 
-osc.on('/eurofooslive/red/sub', () => {
+osc.on(ROOT_PATH + '/red/sub', () => {
   ipcRenderer.send('scoreboard:sub:red');
 });
 
-osc.on('/eurofooslive/blue/sub', () => {
+osc.on(ROOT_PATH + '/blue/sub', () => {
   ipcRenderer.send('scoreboard:sub:blue');
 });
 
-osc.on('/eurofooslive/red/timeout', () => {
+osc.on(ROOT_PATH + '/red/timeout', () => {
   ipcRenderer.send('scoreboard:timeout:red');
 });
 
-osc.on('/eurofooslive/blue/timeout', () => {
+osc.on(ROOT_PATH + '/blue/timeout', () => {
   ipcRenderer.send('scoreboard:timeout:blue');
 });
 
-osc.on('/eurofooslive/scoreboard/reset', () => {
+osc.on(ROOT_PATH + '/scoreboard/reset', () => {
   ipcRenderer.send('scoreboard:reset');
 });

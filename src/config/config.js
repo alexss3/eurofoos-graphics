@@ -7,5 +7,43 @@ export const Config = {
     },
     events: {
         TEAMS_UPDATED: 'teams:updated'
+    },
+    bug: {
+        formats: [
+            'jpg',
+            'png',
+            'gif'
+        ]
+    },
+    webcam: {
+        constraints: {
+            audio: true,
+            video: {
+                width: {
+                    min: 1920
+                },
+                height: {
+                    min: 1080
+                },
+                deviceId: undefined
+            }
+        }
+    },
+    video: {
+        formats: [
+            'mov',
+            'mp4',
+            'avi',
+            'mpeg',
+            'mpg',
+            'mkv'
+        ]
+    },
+    overlay: {
+        formats: [
+            'jpg',
+            'png',
+            'gif'
+        ]
     }
 }

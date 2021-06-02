@@ -11,7 +11,6 @@ export default class Scoreboard {
     constructor(settings: MatchSettings, redTeam: string, blueTeam: string) {
         this.redTeam = new Team(redTeam);
         this.blueTeam = new Team(blueTeam);
-
         this.match = new Match(settings);
     }
 
@@ -36,7 +35,9 @@ export default class Scoreboard {
         const teamPointer = this.returnTeamFromString(team);
         let newSets = teamPointer.sets;
         let newTeamPoints = teamPointer.points;
-        const currOtherTeamPoints = (team === 'red') ? this.blueTeam.points : this.redTeam.points;
+        const currOtherTeamPoints = (team === 'red') 
+            ? this.blueTeam.points 
+            : this.redTeam.points;
 
         // Check if last set or not
         if (this.match.checkIfLastSet()) {
@@ -44,7 +45,8 @@ export default class Scoreboard {
 
             if (newTeamPoints >= this.match.pointsInSet) {
                 // need a two-point margin to win
-                if (Math.abs(newTeamPoints - currOtherTeamPoints) > 1 || newTeamPoints === this.match.maxPoints) {
+                if (Math.abs(newTeamPoints - currOtherTeamPoints) > 1 || 
+                    newTeamPoints === this.match.maxPoints) {
                     newSets += 1;
                     // newBluePoints--;
                     this.match.endMatch();
@@ -166,7 +168,5 @@ export default class Scoreboard {
     resetTimeouts() {
         this.redTeam.timeouts = 0;
         this.blueTeam.timeouts = 0;
-    }
-
-    
+    }    
 }

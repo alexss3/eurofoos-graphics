@@ -89,13 +89,12 @@ main {
 }
 
 #page-control button {
-  width: 75px;
-  height: 75px;
+  width: 120px;
+  height: 120px;
 }
 
 #page-control button i {
-  font-size: 2em !important;
-  margin-top: 5px;
+  font-size: 4em;
 }
 
 .button-wrapper {
@@ -104,12 +103,12 @@ main {
 }
 
 .cp-button-caption {
-  width: 75px;
+  width: auto;
   overflow: hidden;
   text-align: center;
   position: absolute;
   color: white;
-  top: 51px;
+  bottom: 1em;
   left: 50%;
   transform: translate(-50%, 0px);
   z-index: 10;

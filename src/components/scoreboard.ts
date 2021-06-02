@@ -26,7 +26,6 @@ ipcRenderer.on('scoreboard:hide', () => {
         ease: "sine.out",
         top: '130%'
     });
-    // scoreboardWrapper.style.display = 'none';
 });
 
 ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
@@ -143,5 +142,3 @@ storage.get(configKey, (err, data: ConfigData) => {
     });
 
 });
-
-
