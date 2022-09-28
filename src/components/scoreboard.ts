@@ -70,9 +70,6 @@ const updateTeamTimeouts = (red: number, blue: number): void => {
 };
 
 const updateAllValues = (scoreboard: Scoreboard): void => {
-
-    console.log(scoreboard);
-
     const values = {
         teamNames: {
             redTeam: scoreboard.redTeam.title,

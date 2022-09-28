@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 import { Config } from './config/config';
+import { StingerData } from './functionality/storage';
 
 // CHROMA WINDOW
 const launchChromaButton = document.getElementById('launch-chroma-btn');
@@ -86,6 +87,52 @@ ipcRenderer.on('bug:chosen', (event, path) => {
 
   asyncBugImage.addEventListener('error', () => {
     inlineBugPreview.src = null;
+    console.log('Could not load image');
+  });
+});
+
+// Choose Stinger File
+
+const asyncStingerImage = new Image();
+
+const chooseStingerButton = document.getElementById('choose-stinger');
+const stingerFilePath: any = document.getElementById('stinger-path');
+const stingerDuration: any = document.getElementById('stinger-duration');
+const inlineStingerPreview: any = document.getElementById('inline-stinger-preview');
+
+chooseStingerButton.addEventListener('click', () => {
+  ipcRenderer.send('stinger:choose');
+});
+
+stingerDuration.addEventListener('change', () => {
+  ipcRenderer.send('stinger:updated', {
+    duration: stingerDuration.value
+  });
+});
+
+ipcRenderer.on('stinger:updated', (event, data: StingerData) => {
+  console.log('Stinger updated from renderer.ts', data);
+  if (data.duration) {
+    stingerDuration.value = data.duration;
+  }
+});
+
+ipcRenderer.on('stinger:chosen', (event, path) => {
+  stingerFilePath.value = path.split('file:')[1];
+
+  asyncStingerImage.src = path;
+
+  asyncStingerImage.onload = (): void => {
+    inlineStingerPreview.src = path;
+    ipcRenderer.send('stinger:updated', {
+      path,
+      width: asyncStingerImage.width,
+      height: asyncStingerImage.height,
+    });
+  };
+
+  asyncStingerImage.addEventListener('error', () => {
+    inlineStingerPreview.src = null;
     console.log('Could not load image');
   });
 });
@@ -252,6 +299,28 @@ scoreboardButton.addEventListener('click', (e) => {
     scoreboardButton.classList.add('green');
     scoreboardButton.classList.remove('red');
     scoreboardButton.classList.remove('pulse');
+  }
+});
+
+// STINGER
+
+const stingerButton = document.getElementById('stinger-toggle');
+
+stingerButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  const state = stingerButton.getAttribute('data-state');
+  if (state === 'off') {
+    ipcRenderer.send('stinger:play');
+    stingerButton.setAttribute('data-state', 'on');
+    stingerButton.classList.remove('green');
+    stingerButton.classList.add('red');
+    stingerButton.classList.add('pulse');
+    setTimeout(() => {
+      stingerButton.setAttribute('data-state', 'off');
+      stingerButton.classList.add('green');
+      stingerButton.classList.remove('red');
+      stingerButton.classList.remove('pulse');
+    }, stingerDuration.value);
   }
 });
 

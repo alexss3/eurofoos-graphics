@@ -23,6 +23,12 @@ export interface ConfigData {
         redTeam: string;
         blueTeam: string;
     };
+    stinger: {
+        path: string;
+        duration: number;
+        width: number;
+        height: number;
+    };
 }
 
 export interface MatchSettings {

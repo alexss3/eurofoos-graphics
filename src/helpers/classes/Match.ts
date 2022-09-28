@@ -20,26 +20,26 @@ export default class Match {
         this.inProgress = true;
     }
 
-    restartMatch() {
+    restartMatch(): void {
         this.currentSet = 1;
         this.inProgress = true;
     }
 
-    endMatch() {
+    endMatch(): void {
         this.inProgress = false;
     }
 
-    checkIfLastSet() {
+    checkIfLastSet(): boolean {
         return this.currentSet === this.bestOfSets;
     }
 
-    addSet() {
+    addSet(): void {
         if (!this.checkIfLastSet()) {
             this.currentSet += 1;
         }
     }
 
-    subtractSet() {
+    subtractSet(): void {
         if (this.currentSet > 0) {
             this.currentSet -= 1;
         }

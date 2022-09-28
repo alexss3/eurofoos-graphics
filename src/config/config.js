@@ -45,5 +45,14 @@ export const Config = {
             'png',
             'gif'
         ]
+    },
+    stinger: {
+        formats: [
+            'png',
+            'jpg'
+        ],
+        duration: 1000,
+        width: 0,
+        height: 0
     }
 }

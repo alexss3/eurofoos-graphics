@@ -23,14 +23,14 @@ export default class Scoreboard {
         }
     }
 
-    returnTeamObjects() {
+    returnTeamObjects(): { redTeam: Team; blueTeam: Team } {
         return {
             redTeam: this.redTeam,
             blueTeam: this.blueTeam
         }
     }
 
-    evaluateScores(team: string) {
+    evaluateScores(team: string): void {
 
         const teamPointer = this.returnTeamFromString(team);
         let newSets = teamPointer.sets;
@@ -145,7 +145,7 @@ export default class Scoreboard {
     // Reset Methods
 
     // Reset Match
-    resetMatch() {
+    resetMatch(): void {
         this.resetPoints();
         this.resetSets();
         this.resetTimeouts();
@@ -153,19 +153,19 @@ export default class Scoreboard {
     }
 
     // Reset Points
-    resetPoints() {
+    resetPoints(): void {
         this.redTeam.points = 0;
         this.blueTeam.points = 0;
     }
 
     // Reset Sets
-    resetSets() {
+    resetSets(): void {
         this.redTeam.sets = 0;
         this.blueTeam.sets = 0;
     }
 
     // Reset Timeouts
-    resetTimeouts() {
+    resetTimeouts(): void {
         this.redTeam.timeouts = 0;
         this.blueTeam.timeouts = 0;
     }    

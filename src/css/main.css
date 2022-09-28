@@ -130,3 +130,11 @@ main {
 #bug-preview img {
   max-width: 400px;
 }
+
+#stinger-preview {
+  width: 400px;
+}
+
+#stinger-preview img {
+  max-width: 400px;
+}

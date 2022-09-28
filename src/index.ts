@@ -14,6 +14,7 @@ import {
 import * as path from 'path';
 import * as windowStateKeeper from 'electron-window-state';
 import { Config } from './config/config';
+import { StingerData } from './functionality/storage';
 
 // import events from './functionality/events';
 
@@ -165,6 +166,10 @@ ipcMain.on('bug:hide', () => {
   chromaWindow && chromaWindow.webContents.send('bug:hide');
 });
 
+ipcMain.on('stinger:play', () => {
+  chromaWindow && chromaWindow.webContents.send('stinger:play');
+});
+
 ipcMain.on('video-play', () => {
   chromaWindow && chromaWindow.webContents.send('video-play');
 });
@@ -237,6 +242,30 @@ ipcMain.on('bug:choose', (event) => {
 ipcMain.on('bug:updated', (event, path) => {
   chromaWindow && chromaWindow.webContents.send('bug:updated', path);
   event.sender.send('bug:updated', path);
+});
+
+// Choose Stinger File
+ipcMain.on('stinger:choose', (event) => {
+  const options: OpenDialogOptions = {
+    properties: ['openFile'],
+    filters: [{ name: 'Images', extensions: Config.stinger.formats}],
+  };
+
+  dialog
+    .showOpenDialog(mainWindow, options)
+    .then((result) => {
+      const path = `file:${result.filePaths[0]}`;
+      event.sender.send('stinger:chosen', path);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+ipcMain.on('stinger:updated', (event, data: StingerData) => {
+  console.log('Stinger update from index.ts');
+  chromaWindow && chromaWindow.webContents.send('stinger:updated', data);
+  event.sender.send('stinger:updated', data);
 });
 
 

@@ -68,3 +68,7 @@ osc.on(ROOT_PATH + '/blue/timeout', () => {
 osc.on(ROOT_PATH + '/scoreboard/reset', () => {
   ipcRenderer.send('scoreboard:reset');
 });
+
+osc.on(ROOT_PATH + '/stinger/play', () => {
+  ipcRenderer.send('stringer:play');
+});

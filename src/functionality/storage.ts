@@ -14,18 +14,24 @@ const initialData: ConfigData = {
   },
   commentators: [{ name: 'Comm. One' }, { name: 'Comm. Two' }],
   webcam: {
-    device: ''
+    device: '',
   },
   scoreboard: {
     pointsInSet: undefined,
     maxPoints: undefined,
-    bestOfSets: undefined
+    bestOfSets: undefined,
   },
   discipline: 'Open Singles',
   teamNames: {
     redTeam: 'Red Team',
-    blueTeam: 'Blue Team'
-  }
+    blueTeam: 'Blue Team',
+  },
+  stinger: {
+    path: '',
+    duration: 1000,
+    width: 0,
+    height: 0,
+  },
 };
 
 const key = Config.settings.key;
@@ -40,6 +46,8 @@ const updateFromConfigData = (data: ConfigData): void => {
   rendererProcess.webContents.send('bug:chosen', data.bug.path);
   rendererProcess.webContents.send('video:chosen', data.video.path);
   rendererProcess.webContents.send('comms:updated', data.commentators);
+  rendererProcess.webContents.send('stinger:chosen', data.stinger.path);
+  rendererProcess.webContents.send('stinger:updated', data.stinger);
   rendererProcess.webContents.send('webcam:select', data.webcam.device);
   rendererProcess.webContents.send('scoreboard:updated', data.scoreboard);
   rendererProcess.webContents.send('scoreboard:discipline:updated', data.discipline);
@@ -83,6 +91,33 @@ ipcRenderer.on('video:updated', (event, data) => {
 
 ipcRenderer.on('comms:updated', (event, data) => {
   initialData.commentators = data;
+  updateSettingsFile(initialData);
+});
+
+export type StingerData = {
+  path?: string;
+  duration?: number;
+  width?: number;
+  height?: number;
+};
+
+ipcRenderer.on('stinger:updated', (event, data: StingerData) => {
+  if (data.path) {
+    initialData.stinger.path = data.path;
+  }
+
+  if (data.duration) {
+    initialData.stinger.duration = data.duration;
+  }
+
+  if (data.width) {
+    initialData.stinger.width = data.width;
+  }
+
+  if (data.height) {
+    initialData.stinger.height = data.height;
+  }
+
   updateSettingsFile(initialData);
 });
 

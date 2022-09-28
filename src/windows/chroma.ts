@@ -3,6 +3,7 @@ import * as storage from 'electron-json-storage';
 import * as os from 'os';
 import { ConfigData } from '../helpers/interfaces';
 import { Config } from '../config/config';
+import { StingerData } from '../functionality/storage';
 
 const chromaWindow = document.getElementById('chroma');
 
@@ -14,6 +15,10 @@ ipcRenderer.on('window-resized', () => {
   const player: HTMLVideoElement = document.querySelector('#video-container');
   player.style.width = '100%';
   player.style.height = '100%';
+
+  const stingerEl: any = document.getElementById('stinger');
+  const stingerImgEl: any = document.getElementById('stinger-image');
+  stingerEl.style.left = `-${stingerImgEl.width}px`;
 });
 
 // Commentators
@@ -43,6 +48,35 @@ ipcRenderer.on('bug:updated', (event, path) => {
   updateBug(path);
 });
 
+// Stinger
+
+const updateStinger = (data: StingerData): void => {
+  const stingerEl: any = document.getElementById('stinger');
+  const stingerImgEl: any = document.getElementById('stinger-image');
+
+  if (data.duration) {
+    stingerEl.dataset.duration = data.duration;
+  }
+
+  if (data.path) {
+    stingerImgEl.src = data.path.split('file:')[1];
+  }
+
+  if (data.width) {
+    stingerEl.dataset.width = data.width;
+    stingerEl.style.left = `-${data.width}px`;
+  }
+
+  if (data.height) {
+    stingerEl.dataset.height = data.height;
+  }
+};
+
+ipcRenderer.on('stinger:updated', (event, data: StingerData) => {
+  console.log('Got data for stinger', data);
+  updateStinger(data);
+});
+
 // Video
 
 const updateVideo = (path: string): void => {
@@ -53,6 +87,16 @@ const updateVideo = (path: string): void => {
 ipcRenderer.on('video:updated', (event, path) => {
   updateVideo(path);
 });
+
+// Team Names
+const updateTeamNames = (teamNames: any): void => {
+  // ipcRenderer.send('teams:updated', teamNames);
+  const redTeamName: any = document.querySelector('#red-team-name');
+  const blueTeamName: any = document.querySelector('#blue-team-name');
+
+  redTeamName.innerHTML = teamNames.redTeam;
+  blueTeamName.innerHTML = teamNames.blueTeam;
+};
 
 ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
   updateTeamNames(teamNames);
@@ -65,23 +109,15 @@ const updateWebcam = (deviceId: string): void => {
 };
 
 // Scoreboard
-const updateScoreboard = (settings: any): void => {
-  ipcRenderer.send('scoreboard:updated', settings);
-};
+// const updateScoreboard = (settings: any): void => {
+//   ipcRenderer.send('scoreboard:updated', settings);
+// };
 
-const updateDiscipline = (disc: string): void => {
-  ipcRenderer.send('scoreboard:discipline:updated', disc);
-}
+// const updateDiscipline = (disc: string): void => {
+//   ipcRenderer.send('scoreboard:discipline:updated', disc);
+// }
 
-// Team Names
-const updateTeamNames = (teamNames: any): void => {
-  // ipcRenderer.send('teams:updated', teamNames);
-  const redTeamName: any = document.querySelector('#red-team-name');
-  const blueTeamName: any = document.querySelector('#blue-team-name');
 
-  redTeamName.innerHTML = teamNames.redTeam;
-  blueTeamName.innerHTML = teamNames.blueTeam;
-};
 
 
 // Load settings from config file
@@ -97,5 +133,6 @@ storage.get(Config.settings.key, (err, data: ConfigData) => {
   // updateScoreboard(data.scoreboard);
   updateTeamNames(data.teamNames);
   // updateDiscipline(data.discipline);
+  updateStinger(data.stinger);
 });
 
