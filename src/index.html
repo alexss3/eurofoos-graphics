@@ -63,8 +63,8 @@
 
           <div class="divider"></div>
 
-          <div class="row">
-            <div class="col s2 button-wrapper">
+          <div id="control-buttons-container">
+            <div class="button-wrapper">
               <button
                 id="bug-toggle"
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
@@ -74,7 +74,17 @@
               </button>
               <span class="cp-button-caption">Bug</span>
             </div>
-            <div class="col s2 button-wrapper">
+            <div class="button-wrapper">
+              <button
+                id="countdown-toggle"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">timer</i>
+              </button>
+              <span class="cp-button-caption">Countdown</span>
+            </div>
+            <div class="button-wrapper">
               <button
                 id="video-play"
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
@@ -84,7 +94,7 @@
               </button>
               <span class="cp-button-caption">Video</span>
             </div>
-            <div class="col s2 button-wrapper">
+            <div class="button-wrapper">
               <button
                 id="commentators-toggle"
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
@@ -94,7 +104,7 @@
               </button>
               <span class="cp-button-caption">Comm.</span>
             </div>
-            <div class="col s2 button-wrapper">
+            <div class="button-wrapper">
               <button
                 id="webcam-toggle"
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
@@ -104,7 +114,7 @@
               </button>
               <span class="cp-button-caption">Webcam</span>
             </div>
-            <div class="col s2 button-wrapper">
+            <div class="button-wrapper">
               <button
                 id="scoreboard-toggle"
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
@@ -115,7 +125,7 @@
               <span class="cp-button-caption">Scoreboard</span>
             </div>
 
-            <div class="col s2 button-wrapper">
+            <div class="button-wrapper">
               <button
                 id="stinger-toggle"
                 class="btn waves-effect waves-dark green darken-1 z-depth-3"
@@ -157,6 +167,25 @@
               </div>
             </div>
             <div class="col s1"></div>
+          </div>
+        </div>
+
+        <!-- Countdown Settings Page -->
+        <div id="page-countdown" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Countdown Settings</h3></div>
+            <div class="col s1"></div>
+          </div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s5">
+              <label for="countdown-value">Value in minutes</label>
+              <input type="number" id="countdown-value" class="grey-text" />
+              <button type="button" id="countdown-reset" class="btn waves-effect waves-light">Reset</button>
+            </div>
+            <div class="col s6"></div>
           </div>
         </div>
 
@@ -402,6 +431,7 @@
           <ul id="footer-nav">
             <li data-state="on" class="selected" id="bottom-nav-control"><a href="#"><i class="material-icons small">apps</i><span>Control</span></a></li>
             <li data-state="off" id="bottom-nav-bug"><a href="#"><i class="material-icons small">bug_report</i><span>Bug</span></a></li>
+            <li data-state="off" id="bottom-nav-countdown"><a href="#"><i class="material-icons small">timer</i><span>Countdown</span></a></li>
             <li data-state="off" id="bottom-nav-video"><a href="#"><i class="material-icons small">ondemand_video</i><span>Videos</span></a></li>
             <li data-state="off" id="bottom-nav-comm"><a href="#"><i class="material-icons small">headset_mic</i><span>Comm.</span></a></li>
             <li data-state="off" id="bottom-nav-overlay"><a href="#"><i class="material-icons small">insert_photo</i><span>Overlays</span></a></li>

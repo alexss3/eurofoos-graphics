@@ -4,14 +4,15 @@ import * as os from 'os';
 import { ConfigData } from '../helpers/interfaces';
 import { Config } from '../config/config';
 import { StingerData } from '../functionality/storage';
+import eventMap from '../config/events';
 
 const chromaWindow = document.getElementById('chroma');
 
 chromaWindow.addEventListener('dblclick', () => {
-  ipcRenderer.send('fullscreen-chroma-window');
+  ipcRenderer.send(eventMap.CHROMA.FULLSCREEN);
 });
 
-ipcRenderer.on('window-resized', () => {
+ipcRenderer.on(eventMap.CHROMA.RESIZE, () => {
   const player: HTMLVideoElement = document.querySelector('#video-container');
   player.style.width = '100%';
   player.style.height = '100%';
@@ -33,7 +34,7 @@ const updateCommNames = (names: any): void => {
   commentatorTwo.innerHTML = names[1].name;
 };
 
-ipcRenderer.on('commentator-names-update', (e, names) => {
+ipcRenderer.on(eventMap.COMMENTATORS.NAMES, (e, names) => {
   updateCommNames(names);
 });
 
@@ -44,8 +45,18 @@ const updateBug = (path: string): void => {
   bugEl.src = path.split('file:')[1];
 };
 
-ipcRenderer.on('bug:updated', (event, path) => {
+ipcRenderer.on(eventMap.BUG.UPDATED, (event, path) => {
   updateBug(path);
+});
+
+// Countdown
+const updateCountdown = (value: number): void => {
+  const countdownEl = document.getElementById('countdown');
+  countdownEl.dataset.value = value.toString();
+};
+
+ipcRenderer.on(eventMap.COUNTDOWN.UPDATED, (event, value) => {
+  updateCountdown(value);
 });
 
 // Stinger
@@ -72,8 +83,7 @@ const updateStinger = (data: StingerData): void => {
   }
 };
 
-ipcRenderer.on('stinger:updated', (event, data: StingerData) => {
-  console.log('Got data for stinger', data);
+ipcRenderer.on(eventMap.STINGER.UPDATED, (event, data: StingerData) => {
   updateStinger(data);
 });
 
@@ -84,7 +94,7 @@ const updateVideo = (path: string): void => {
   videoEl.src = path.split('file:')[1];
 };
 
-ipcRenderer.on('video:updated', (event, path) => {
+ipcRenderer.on(eventMap.VIDEO.UPDATED, (event, path) => {
   updateVideo(path);
 });
 
@@ -105,7 +115,7 @@ ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
 // Webcam
 
 const updateWebcam = (deviceId: string): void => {
-  ipcRenderer.send('webcam:select', deviceId);
+  ipcRenderer.send(eventMap.WEBCAM.SELECT, deviceId);
 };
 
 // Scoreboard
@@ -117,9 +127,6 @@ const updateWebcam = (deviceId: string): void => {
 //   ipcRenderer.send('scoreboard:discipline:updated', disc);
 // }
 
-
-
-
 // Load settings from config file
 
 storage.setDataPath(os.homedir());
@@ -127,6 +134,7 @@ storage.setDataPath(os.homedir());
 storage.get(Config.settings.key, (err, data: ConfigData) => {
   if (err) console.error(err);
   updateBug(data.bug.path);
+  updateCountdown(data.countdown.value);
   updateVideo(data.video.path);
   updateCommNames(data.commentators);
   updateWebcam(data.webcam.device);
@@ -135,4 +143,3 @@ storage.get(Config.settings.key, (err, data: ConfigData) => {
   // updateDiscipline(data.discipline);
   updateStinger(data.stinger);
 });
-

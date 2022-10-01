@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 import * as OSC from 'osc-js';
+import eventMap from '../config/events';
 
 const osc = new OSC({
   plugin: new OSC.DatagramPlugin({
@@ -42,33 +43,33 @@ osc.on(ROOT_PATH + '/show-webcam', () => {
 });
 
 osc.on(ROOT_PATH + '/red/point', () => {
-  ipcRenderer.send('scoreboard:point:red');
+  ipcRenderer.send(eventMap.SCOREBOARD.POINT.RED);
 });
 
 osc.on(ROOT_PATH + '/blue/point', () => {
-  ipcRenderer.send('scoreboard:point:blue');
+  ipcRenderer.send(eventMap.SCOREBOARD.POINT.BLUE);
 });
 
 osc.on(ROOT_PATH + '/red/sub', () => {
-  ipcRenderer.send('scoreboard:sub:red');
+  ipcRenderer.send(eventMap.SCOREBOARD.SUBTRACT.RED);
 });
 
 osc.on(ROOT_PATH + '/blue/sub', () => {
-  ipcRenderer.send('scoreboard:sub:blue');
+  ipcRenderer.send(eventMap.SCOREBOARD.SUBTRACT.BLUE);
 });
 
 osc.on(ROOT_PATH + '/red/timeout', () => {
-  ipcRenderer.send('scoreboard:timeout:red');
+  ipcRenderer.send(eventMap.SCOREBOARD.TIMEOUT.RED);
 });
 
 osc.on(ROOT_PATH + '/blue/timeout', () => {
-  ipcRenderer.send('scoreboard:timeout:blue');
+  ipcRenderer.send(eventMap.SCOREBOARD.TIMEOUT.BLUE);
 });
 
 osc.on(ROOT_PATH + '/scoreboard/reset', () => {
-  ipcRenderer.send('scoreboard:reset');
+  ipcRenderer.send(eventMap.SCOREBOARD.RESET);
 });
 
 osc.on(ROOT_PATH + '/stinger/play', () => {
-  ipcRenderer.send('stringer:play');
+  ipcRenderer.send(eventMap.STINGER.PLAY);
 });

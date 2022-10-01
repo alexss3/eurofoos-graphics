@@ -8,15 +8,14 @@ import {
   Menu,
   session,
   systemPreferences,
-  desktopCapturer
+  desktopCapturer,
 } from 'electron';
 
 import * as path from 'path';
 import * as windowStateKeeper from 'electron-window-state';
 import { Config } from './config/config';
 import { StingerData } from './functionality/storage';
-
-// import events from './functionality/events';
+import eventMap from './config/events';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -36,23 +35,21 @@ const createMainWindow = (): void => {
     width: 1200,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
-    }
+      enableRemoteModule: true,
+    },
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
 
   mainSession = mainWindow.webContents.session;
-
 };
 
 const createChromaWindow = (): void => {
-
   const chromaWindowState = windowStateKeeper({
     defaultHeight: 1080,
     defaultWidth: 1920,
-    file: 'chroma.json'
+    file: 'chroma.json',
   });
 
   chromaWindow = new BrowserWindow({
@@ -64,7 +61,7 @@ const createChromaWindow = (): void => {
     webPreferences: {
       nodeIntegration: true,
       backgroundThrottling: false,
-      enableRemoteModule: true
+      enableRemoteModule: true,
     },
   });
 
@@ -82,7 +79,7 @@ const createChromaWindow = (): void => {
   chromaWindowState.manage(chromaWindow);
 
   chromaWindow.on('resize', () => {
-    chromaWindow.webContents.send('window-resized');
+    chromaWindow.webContents.send(eventMap.CHROMA.RESIZE);
   });
 
   chromaWindow.on('closed', () => {
@@ -104,10 +101,8 @@ const createMenus = (): void => {
   const menuTemplate: Array<any> = [
     {
       label: 'File',
-      submenu: [
-        { label: 'Cool beans'}
-      ]
-    }
+      submenu: [{ label: 'Cool beans' }],
+    },
   ];
 
   if (process.platform === 'darwin') {
@@ -116,7 +111,7 @@ const createMenus = (): void => {
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
-}
+};
 
 const initialSetup = (): void => {
   createMainWindow();
@@ -154,74 +149,83 @@ ipcMain.on('chroma', () => {
   }
 });
 
-ipcMain.on('fullscreen-chroma-window', () => {
+ipcMain.on(eventMap.CHROMA.FULLSCREEN, () => {
   chromaWindow && fullscreenBrowserWindow(chromaWindow);
 });
 
-ipcMain.on('bug:show', () => {
-  chromaWindow && chromaWindow.webContents.send('bug:show');
+ipcMain.on(eventMap.BUG.SHOW, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.BUG.SHOW);
 });
 
-ipcMain.on('bug:hide', () => {
-  chromaWindow && chromaWindow.webContents.send('bug:hide');
+ipcMain.on(eventMap.BUG.HIDE, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.BUG.HIDE);
 });
 
-ipcMain.on('stinger:play', () => {
-  chromaWindow && chromaWindow.webContents.send('stinger:play');
+ipcMain.on(eventMap.COUNTDOWN.SHOW, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.COUNTDOWN.SHOW);
 });
 
-ipcMain.on('video-play', () => {
-  chromaWindow && chromaWindow.webContents.send('video-play');
+ipcMain.on(eventMap.COUNTDOWN.HIDE, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.COUNTDOWN.HIDE);
 });
 
-ipcMain.on('video-stop', () => {
-  chromaWindow && chromaWindow.webContents.send('video-stop');
+ipcMain.on(eventMap.STINGER.PLAY, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.STINGER.PLAY);
 });
 
-ipcMain.on('video-ended', () => {
-  mainWindow.webContents.send('video-ended');
+ipcMain.on(eventMap.VIDEO.PLAY, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.VIDEO.PLAY);
 });
 
-ipcMain.on('webcam:start', (event, deviceId) => {
-  systemPreferences.askForMediaAccess('camera')
-    .then(access => {
-      console.log("Access: ", access);
+ipcMain.on(eventMap.VIDEO.STOP, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.VIDEO.STOP);
+});
+
+ipcMain.on(eventMap.VIDEO.ENDED, () => {
+  mainWindow.webContents.send(eventMap.VIDEO.ENDED);
+});
+
+ipcMain.on(eventMap.WEBCAM.START, (event, deviceId) => {
+  systemPreferences
+    .askForMediaAccess('camera')
+    .then((access) => {
+      console.log('Access: ', access);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
-  chromaWindow && chromaWindow.webContents.send('webcam:start', deviceId);
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.WEBCAM.START, deviceId);
 });
 
-ipcMain.on('webcam:stop', () => {
-  chromaWindow && chromaWindow.webContents.send('webcam:stop');
+ipcMain.on(eventMap.WEBCAM.STOP, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.WEBCAM.STOP);
 });
 
-
-ipcMain.on('commentators-show', () => {
-  chromaWindow && chromaWindow.webContents.send('commentators-show');
+ipcMain.on(eventMap.COMMENTATORS.SHOW, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.COMMENTATORS.SHOW);
 });
 
-ipcMain.on('commentators-hide', () => {
-  chromaWindow && chromaWindow.webContents.send('commentators-hide');
+ipcMain.on(eventMap.COMMENTATORS.HIDE, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.COMMENTATORS.HIDE);
 });
 
-ipcMain.on('commentator-names-update', (event, names) => {
-  chromaWindow && chromaWindow.webContents.send('commentator-names-update', names);
-  event.sender.send('comms:updated', names);
+ipcMain.on(eventMap.COMMENTATORS.NAMES, (event, names) => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.COMMENTATORS.NAMES, names);
+  event.sender.send(eventMap.COMMENTATORS.UPDATED, names);
 });
 
-ipcMain.on('scoreboard:show', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:show');
+ipcMain.on(eventMap.SCOREBOARD.SHOW, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.SCOREBOARD.SHOW);
 });
 
-ipcMain.on('scoreboard:hide', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:hide');
+ipcMain.on(eventMap.SCOREBOARD.HIDE, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.SCOREBOARD.HIDE);
 });
-
 
 // Choose Logo File
-ipcMain.on('bug:choose', (event) => {
+ipcMain.on(eventMap.BUG.CHOOSE, (event) => {
   const options: OpenDialogOptions = {
     properties: ['openFile'],
     filters: [{ name: 'Images', extensions: Config.bug.formats }],
@@ -231,46 +235,50 @@ ipcMain.on('bug:choose', (event) => {
     .showOpenDialog(mainWindow, options)
     .then((result) => {
       const path = `file:${result.filePaths[0]}`;
-      event.sender.send('bug:chosen', path);
+      event.sender.send(eventMap.BUG.CHOSEN, path);
     })
     .catch((err) => {
       console.error(err);
     });
 });
 
+ipcMain.on(eventMap.BUG.UPDATED, (event, path) => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.BUG.UPDATED, path);
+  event.sender.send(eventMap.BUG.UPDATED, path);
+});
 
-ipcMain.on('bug:updated', (event, path) => {
-  chromaWindow && chromaWindow.webContents.send('bug:updated', path);
-  event.sender.send('bug:updated', path);
+// Countdown value updated
+ipcMain.on(eventMap.COUNTDOWN.UPDATED, (event, value) => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.COUNTDOWN.UPDATED, value);
+  event.sender.send(eventMap.COUNTDOWN.UPDATED, value);
 });
 
 // Choose Stinger File
-ipcMain.on('stinger:choose', (event) => {
+ipcMain.on(eventMap.STINGER.CHOOSE, (event) => {
   const options: OpenDialogOptions = {
     properties: ['openFile'],
-    filters: [{ name: 'Images', extensions: Config.stinger.formats}],
+    filters: [{ name: 'Images', extensions: Config.stinger.formats }],
   };
 
   dialog
     .showOpenDialog(mainWindow, options)
     .then((result) => {
       const path = `file:${result.filePaths[0]}`;
-      event.sender.send('stinger:chosen', path);
+      event.sender.send(eventMap.STINGER.CHOSEN, path);
     })
     .catch((err) => {
       console.error(err);
     });
 });
 
-ipcMain.on('stinger:updated', (event, data: StingerData) => {
-  console.log('Stinger update from index.ts');
-  chromaWindow && chromaWindow.webContents.send('stinger:updated', data);
-  event.sender.send('stinger:updated', data);
+ipcMain.on(eventMap.STINGER.UPDATED, (event, data: StingerData) => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.STINGER.UPDATED, data);
+  event.sender.send(eventMap.STINGER.UPDATED, data);
 });
 
-
 // Choose Video File
-ipcMain.on('video:choose', (event) => {
+ipcMain.on(eventMap.VIDEO.CHOOSE, (event) => {
   const options: OpenDialogOptions = {
     properties: ['openFile'],
     filters: [{ name: 'Movies', extensions: Config.video.formats }],
@@ -280,16 +288,16 @@ ipcMain.on('video:choose', (event) => {
     .showOpenDialog(mainWindow, options)
     .then((result) => {
       const path = `file:${result.filePaths[0]}`;
-      event.sender.send('video:chosen', path);
+      event.sender.send(eventMap.VIDEO.CHOSEN, path);
     })
     .catch((err) => {
       console.error(err);
     });
 });
 
-ipcMain.on('video:updated', (event, path) => {
-  chromaWindow && chromaWindow.webContents.send('video:updated', path);
-  event.sender.send('video:updated', path);
+ipcMain.on(eventMap.VIDEO.UPDATED, (event, path) => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.VIDEO.UPDATED, path);
+  event.sender.send(eventMap.VIDEO.UPDATED, path);
 });
 
 // Overlay
@@ -303,9 +311,9 @@ ipcMain.on('overlay:add', (event) => {
   dialog
     .showOpenDialog(mainWindow, options)
     .then((result) => {
-      const paths = result.filePaths.map(path => {
+      const paths = result.filePaths.map((path) => {
         return `file:${path}`;
-      }) ;
+      });
       event.sender.send('overlay:chosen', paths);
     })
     .catch((err) => {
@@ -318,53 +326,61 @@ ipcMain.on('overlay:updated', (event, paths) => {
 });
 
 // Webcam
-ipcMain.on('webcam:select', (event, deviceId) => {
-  chromaWindow && chromaWindow.webContents.send('webcam:updated', deviceId);
-  event.sender.send('webcam:updated', deviceId);
+ipcMain.on(eventMap.WEBCAM.SELECT, (event, deviceId) => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.WEBCAM.UPDATED, deviceId);
+  event.sender.send(eventMap.WEBCAM.UPDATED, deviceId);
 });
 
 // Scoreboard
 
-ipcMain.on('scoreboard:updated', (event, settings) => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:updated', settings);
-  event.sender.send('scoreboard:updated', settings);
+ipcMain.on(eventMap.SCOREBOARD.UPDATED, (event, settings) => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.SCOREBOARD.UPDATED, settings);
+  event.sender.send(eventMap.SCOREBOARD.UPDATED, settings);
 });
 
-ipcMain.on('scoreboard:discipline:updated', (event, disc) => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:discipline:updated', disc);
-  event.sender.send('scoreboard:discipline:updated', disc);
+ipcMain.on(eventMap.SCOREBOARD.DISCIPLINE.UPDATED, (event, disc) => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.SCOREBOARD.DISCIPLINE.UPDATED, disc);
+  event.sender.send(eventMap.SCOREBOARD.DISCIPLINE.UPDATED, disc);
 });
 
-ipcMain.on('scoreboard:point:red', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:point:red');
+ipcMain.on(eventMap.SCOREBOARD.POINT.RED, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.SCOREBOARD.POINT.RED);
 });
 
-ipcMain.on('scoreboard:point:blue', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:point:blue');
+ipcMain.on(eventMap.SCOREBOARD.POINT.BLUE, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.SCOREBOARD.POINT.BLUE);
 });
 
-ipcMain.on('scoreboard:sub:red', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:sub:red');
+ipcMain.on(eventMap.SCOREBOARD.SUBTRACT.RED, () => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.SCOREBOARD.SUBTRACT.RED);
 });
 
-ipcMain.on('scoreboard:sub:blue', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:sub:blue');
+ipcMain.on(eventMap.SCOREBOARD.SUBTRACT.BLUE, () => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.SCOREBOARD.SUBTRACT.BLUE);
 });
 
-ipcMain.on('scoreboard:timeout:red', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:timeout:red');
+ipcMain.on(eventMap.SCOREBOARD.TIMEOUT.RED, () => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.SCOREBOARD.TIMEOUT.RED);
 });
 
-ipcMain.on('scoreboard:timeout:blue', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:timeout:blue');
+ipcMain.on(eventMap.SCOREBOARD.TIMEOUT.BLUE, () => {
+  chromaWindow &&
+    chromaWindow.webContents.send(eventMap.SCOREBOARD.TIMEOUT.BLUE);
 });
 
-ipcMain.on('scoreboard:reset', () => {
-  chromaWindow && chromaWindow.webContents.send('scoreboard:reset');
+ipcMain.on(eventMap.SCOREBOARD.RESET, () => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.SCOREBOARD.RESET);
 });
 
 // Team Names
 ipcMain.on(Config.actions.TEAMS_UPDATE, (event, teamNames) => {
-  chromaWindow && chromaWindow.webContents.send(Config.events.TEAMS_UPDATED, teamNames);
+  chromaWindow &&
+    chromaWindow.webContents.send(Config.events.TEAMS_UPDATED, teamNames);
   event.sender.send(Config.events.TEAMS_UPDATED, teamNames);
 });

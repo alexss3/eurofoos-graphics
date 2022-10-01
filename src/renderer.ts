@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import { Config } from './config/config';
 import { StingerData } from './functionality/storage';
+import eventMap from './config/events';
 
 // CHROMA WINDOW
 const launchChromaButton = document.getElementById('launch-chroma-btn');
@@ -10,10 +11,10 @@ launchChromaButton.addEventListener('click', (e) => {
   ipcRenderer.send('chroma');
 });
 
-
 // Bottom Nav Buttons
 const bottomNavButtons = document.querySelectorAll('#footer-nav li a');
-const pagesArray: NodeListOf<HTMLElement> = document.querySelectorAll('div.page');
+const pagesArray: NodeListOf<HTMLElement> =
+  document.querySelectorAll('div.page');
 
 bottomNavButtons.forEach((button) => {
   button.addEventListener('click', () => {
@@ -36,7 +37,6 @@ bottomNavButtons.forEach((button) => {
   });
 });
 
-
 // BUG
 
 const bugToggleButton = document.getElementById('bug-toggle');
@@ -46,19 +46,17 @@ bugToggleButton.addEventListener('click', (e) => {
 
   const state = bugToggleButton.getAttribute('data-state');
   if (state === 'off') {
-    ipcRenderer.send('bug:show');
+    ipcRenderer.send(eventMap.BUG.SHOW);
     bugToggleButton.setAttribute('data-state', 'on');
     bugToggleButton.classList.remove('green');
     bugToggleButton.classList.add('red');
     bugToggleButton.classList.add('pulse');
-
   } else {
-    ipcRenderer.send('bug:hide');
+    ipcRenderer.send(eventMap.BUG.HIDE);
     bugToggleButton.setAttribute('data-state', 'off');
     bugToggleButton.classList.remove('red');
     bugToggleButton.classList.remove('pulse');
     bugToggleButton.classList.add('green');
-
   }
 });
 
@@ -71,24 +69,60 @@ const bugFilePath: any = document.getElementById('bug-path');
 const inlineBugPreview: any = document.getElementById('inline-bug-preview');
 
 chooseBugButton.addEventListener('click', () => {
-  ipcRenderer.send('bug:choose');
+  ipcRenderer.send(eventMap.BUG.CHOOSE);
 });
 
-ipcRenderer.on('bug:chosen', (event, path) => {
-  
+ipcRenderer.on(eventMap.BUG.CHOSEN, (event, path) => {
   bugFilePath.value = path.split('file:')[1];
 
   asyncBugImage.src = path;
 
   asyncBugImage.onload = (): void => {
     inlineBugPreview.src = path;
-    ipcRenderer.send('bug:updated', path);
+    ipcRenderer.send(eventMap.BUG.UPDATED, path);
   };
 
   asyncBugImage.addEventListener('error', () => {
     inlineBugPreview.src = null;
     console.log('Could not load image');
   });
+});
+
+// Countdown timer
+const countdownValue: any = document.getElementById('countdown-value');
+const countdownReset: any = document.getElementById('countdown-reset');
+
+countdownValue.addEventListener('change', (event: any) => {
+  ipcRenderer.send(eventMap.COUNTDOWN.UPDATED, event.target.value);
+});
+
+countdownReset.addEventListener('click', () => {
+  ipcRenderer.send(eventMap.COUNTDOWN.RESET);
+});
+
+ipcRenderer.on(eventMap.COUNTDOWN.UPDATED, (event, value) => {
+  countdownValue.value = value;
+});
+
+const countdownPlayButton = document.getElementById('countdown-toggle');
+
+countdownPlayButton.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const state = countdownPlayButton.getAttribute('data-state');
+  if (state === 'off') {
+    ipcRenderer.send(eventMap.COUNTDOWN.SHOW);
+    countdownPlayButton.setAttribute('data-state', 'on');
+    countdownPlayButton.classList.remove('green');
+    countdownPlayButton.classList.add('red');
+    countdownPlayButton.classList.add('pulse');
+  } else {
+    ipcRenderer.send(eventMap.COUNTDOWN.HIDE);
+    countdownPlayButton.setAttribute('data-state', 'off');
+    countdownPlayButton.classList.remove('red');
+    countdownPlayButton.classList.remove('pulse');
+    countdownPlayButton.classList.add('green');
+  }
 });
 
 // Choose Stinger File
@@ -98,33 +132,34 @@ const asyncStingerImage = new Image();
 const chooseStingerButton = document.getElementById('choose-stinger');
 const stingerFilePath: any = document.getElementById('stinger-path');
 const stingerDuration: any = document.getElementById('stinger-duration');
-const inlineStingerPreview: any = document.getElementById('inline-stinger-preview');
+const inlineStingerPreview: any = document.getElementById(
+  'inline-stinger-preview'
+);
 
 chooseStingerButton.addEventListener('click', () => {
-  ipcRenderer.send('stinger:choose');
+  ipcRenderer.send(eventMap.STINGER.CHOOSE);
 });
 
 stingerDuration.addEventListener('change', () => {
-  ipcRenderer.send('stinger:updated', {
-    duration: stingerDuration.value
+  ipcRenderer.send(eventMap.STINGER.UPDATED, {
+    duration: stingerDuration.value,
   });
 });
 
-ipcRenderer.on('stinger:updated', (event, data: StingerData) => {
-  console.log('Stinger updated from renderer.ts', data);
+ipcRenderer.on(eventMap.STINGER.UPDATED, (event, data: StingerData) => {
   if (data.duration) {
     stingerDuration.value = data.duration;
   }
 });
 
-ipcRenderer.on('stinger:chosen', (event, path) => {
+ipcRenderer.on(eventMap.STINGER.CHOSEN, (event, path) => {
   stingerFilePath.value = path.split('file:')[1];
 
   asyncStingerImage.src = path;
 
   asyncStingerImage.onload = (): void => {
     inlineStingerPreview.src = path;
-    ipcRenderer.send('stinger:updated', {
+    ipcRenderer.send(eventMap.STINGER.UPDATED, {
       path,
       width: asyncStingerImage.width,
       height: asyncStingerImage.height,
@@ -144,40 +179,37 @@ const videoChooseButton = document.getElementById('choose-video');
 const videoFilePath: any = document.getElementById('video-path');
 
 videoChooseButton.addEventListener('click', () => {
-  ipcRenderer.send('video:choose');
+  ipcRenderer.send(eventMap.VIDEO.CHOOSE);
 });
 
-ipcRenderer.on('video:chosen', (event, path) => {
+ipcRenderer.on(eventMap.VIDEO.CHOSEN, (event, path) => {
   videoFilePath.value = path.split('file:')[1];
-  ipcRenderer.send('video:updated', path);
+  ipcRenderer.send(eventMap.VIDEO.UPDATED, path);
 });
 
 videoPlayButton.addEventListener('click', (e) => {
   e.preventDefault();
   const state = videoPlayButton.getAttribute('data-state');
   if (state === 'off') {
-    ipcRenderer.send('video-play');
+    ipcRenderer.send(eventMap.VIDEO.PLAY);
     videoPlayButton.setAttribute('data-state', 'on');
     videoPlayButton.classList.remove('green');
     videoPlayButton.classList.add('red');
     videoPlayButton.classList.add('pulse');
-
   } else {
-    ipcRenderer.send('video-stop');
+    ipcRenderer.send(eventMap.VIDEO.STOP);
     videoPlayButton.setAttribute('data-state', 'off');
     videoPlayButton.classList.add('green');
     videoPlayButton.classList.remove('red');
     videoPlayButton.classList.remove('pulse');
-
   }
 });
 
-ipcRenderer.on('video-ended', () => {
+ipcRenderer.on(eventMap.VIDEO.ENDED, () => {
   videoPlayButton.setAttribute('data-state', 'off');
   videoPlayButton.classList.add('green');
   videoPlayButton.classList.remove('red');
   videoPlayButton.classList.remove('pulse');
-
 });
 
 // COMMENTATORS
@@ -188,19 +220,17 @@ commentatorsButton.addEventListener('click', (e) => {
   e.preventDefault();
   const state = commentatorsButton.getAttribute('data-state');
   if (state === 'off') {
-    ipcRenderer.send('commentators-show');
+    ipcRenderer.send(eventMap.COMMENTATORS.SHOW);
     commentatorsButton.setAttribute('data-state', 'on');
     commentatorsButton.classList.remove('green');
     commentatorsButton.classList.add('red');
     commentatorsButton.classList.add('pulse');
-
   } else {
-    ipcRenderer.send('commentators-hide');
+    ipcRenderer.send(eventMap.COMMENTATORS.HIDE);
     commentatorsButton.setAttribute('data-state', 'off');
     commentatorsButton.classList.add('green');
     commentatorsButton.classList.remove('red');
     commentatorsButton.classList.remove('pulse');
-
   }
 });
 
@@ -212,17 +242,16 @@ commentatorUpdateButton.addEventListener('click', (e) => {
   e.preventDefault();
   // send the values of the commentator names to ipcMain then to chroma window
   const payload = [
-    { name: commentatorOneTitle.value }, 
-    { name: commentatorTwoTitle.value } 
-  ]
-  ipcRenderer.send('commentator-names-update', payload);
+    { name: commentatorOneTitle.value },
+    { name: commentatorTwoTitle.value },
+  ];
+  ipcRenderer.send(eventMap.COMMENTATORS.NAMES, payload);
 });
 
-ipcRenderer.on('comms:updated', (event, names) => {
+ipcRenderer.on(eventMap.COMMENTATORS.UPDATED, (event, names) => {
   commentatorOneTitle.value = names[0].name;
   commentatorTwoTitle.value = names[1].name;
 });
-
 
 // Overlay
 
@@ -236,19 +265,21 @@ ipcRenderer.on('overlay:chosen', (event, paths) => {
   ipcRenderer.send('overlay:updated', paths);
 });
 
-
 // WEBCAM
 const webcamButton = document.getElementById('webcam-toggle');
 const webcamSelect: any = document.getElementById('select-webcam');
 
-navigator.mediaDevices.enumerateDevices()
-  .then(devices => {
-    const videoDevices = devices.filter(device => device.kind === 'videoinput');
-    videoDevices.forEach(device => {
+navigator.mediaDevices
+  .enumerateDevices()
+  .then((devices) => {
+    const videoDevices = devices.filter(
+      (device) => device.kind === 'videoinput'
+    );
+    videoDevices.forEach((device) => {
       webcamSelect.appendChild(new Option(device.label, device.deviceId));
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 
@@ -256,14 +287,13 @@ webcamButton.addEventListener('click', (e) => {
   e.preventDefault();
   const state = webcamButton.getAttribute('data-state');
   if (state === 'off') {
-    ipcRenderer.send('webcam:start', webcamSelect.value);
+    ipcRenderer.send(eventMap.WEBCAM.START, webcamSelect.value);
     webcamButton.setAttribute('data-state', 'on');
     webcamButton.classList.remove('green');
     webcamButton.classList.add('red');
     webcamButton.classList.add('pulse');
-
   } else {
-    ipcRenderer.send('webcam:stop');
+    ipcRenderer.send(eventMap.WEBCAM.STOP);
     webcamButton.setAttribute('data-state', 'off');
     webcamButton.classList.add('green');
     webcamButton.classList.remove('red');
@@ -272,10 +302,10 @@ webcamButton.addEventListener('click', (e) => {
 });
 
 webcamSelect.addEventListener('change', (e: any) => {
-  ipcRenderer.send('webcam:select', e.target.value);
+  ipcRenderer.send(eventMap.WEBCAM.SELECT, e.target.value);
 });
 
-ipcRenderer.on('webcam:select', (event, deviceId) => {
+ipcRenderer.on(eventMap.WEBCAM.SELECT, (event, deviceId) => {
   webcamSelect.value = deviceId;
 });
 
@@ -287,14 +317,13 @@ scoreboardButton.addEventListener('click', (e) => {
   e.preventDefault();
   const state = scoreboardButton.getAttribute('data-state');
   if (state === 'off') {
-    ipcRenderer.send('scoreboard:show');
+    ipcRenderer.send(eventMap.SCOREBOARD.SHOW);
     scoreboardButton.setAttribute('data-state', 'on');
     scoreboardButton.classList.remove('green');
     scoreboardButton.classList.add('red');
     scoreboardButton.classList.add('pulse');
-
   } else {
-    ipcRenderer.send('scoreboard:hide');
+    ipcRenderer.send(eventMap.SCOREBOARD.HIDE);
     scoreboardButton.setAttribute('data-state', 'off');
     scoreboardButton.classList.add('green');
     scoreboardButton.classList.remove('red');
@@ -310,7 +339,7 @@ stingerButton.addEventListener('click', (e) => {
   e.preventDefault();
   const state = stingerButton.getAttribute('data-state');
   if (state === 'off') {
-    ipcRenderer.send('stinger:play');
+    ipcRenderer.send(eventMap.STINGER.PLAY);
     stingerButton.setAttribute('data-state', 'on');
     stingerButton.classList.remove('green');
     stingerButton.classList.add('red');
@@ -324,7 +353,6 @@ stingerButton.addEventListener('click', (e) => {
   }
 });
 
-
 const pointsInSetSelect: any = document.getElementById('scoreboard-points-set');
 const maxPointsSelect: any = document.getElementById('scoreboard-max-points');
 const bestOfSelect: any = document.getElementById('scoreboard-best-of');
@@ -333,47 +361,61 @@ const disciplineSelect: any = document.getElementById('scoreboard-discipline');
 const redTeamName: any = document.getElementById('red-team-name');
 const blueTeamName: any = document.getElementById('blue-team-name');
 
-const updateScoreboardButton = document.getElementById('scoreboard-names-update');
+const updateScoreboardButton = document.getElementById(
+  'scoreboard-names-update'
+);
 
 const returnCurrentScoreboardSettings = (): {} => {
   return {
     pointsInSet: pointsInSetSelect.value,
     maxPoints: maxPointsSelect.value,
-    bestOfSets: bestOfSelect.value
+    bestOfSets: bestOfSelect.value,
   };
 };
 
 pointsInSetSelect.addEventListener('change', () => {
-  ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
+  ipcRenderer.send(
+    eventMap.SCOREBOARD.UPDATED,
+    returnCurrentScoreboardSettings()
+  );
 });
 
 maxPointsSelect.addEventListener('change', () => {
-  ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
+  ipcRenderer.send(
+    eventMap.SCOREBOARD.UPDATED,
+    returnCurrentScoreboardSettings()
+  );
 });
 
 bestOfSelect.addEventListener('change', () => {
-  ipcRenderer.send('scoreboard:updated', returnCurrentScoreboardSettings());
+  ipcRenderer.send(
+    eventMap.SCOREBOARD.UPDATED,
+    returnCurrentScoreboardSettings()
+  );
 });
 
 disciplineSelect.addEventListener('change', () => {
-  ipcRenderer.send('scoreboard:discipline:updated', disciplineSelect.value);
+  ipcRenderer.send(
+    eventMap.SCOREBOARD.DISCIPLINE.UPDATED,
+    disciplineSelect.value
+  );
 });
 
 // This sets the select fields to the right values
-ipcRenderer.on('scoreboard:updated', (event, settings) => {
+ipcRenderer.on(eventMap.SCOREBOARD.UPDATED, (event, settings) => {
   pointsInSetSelect.value = settings.pointsInSet;
   maxPointsSelect.value = settings.maxPoints;
   bestOfSelect.value = settings.bestOfSets;
 });
 
-ipcRenderer.on('scoreboard:discipline:updated', (event, disc) => {
+ipcRenderer.on(eventMap.SCOREBOARD.DISCIPLINE.UPDATED, (event, disc) => {
   disciplineSelect.value = disc;
 });
 
 updateScoreboardButton.addEventListener('click', () => {
   const teamNames = {
     redTeam: redTeamName.value,
-    blueTeam: blueTeamName.value
+    blueTeam: blueTeamName.value,
   };
   ipcRenderer.send(Config.actions.TEAMS_UPDATE, teamNames);
 });

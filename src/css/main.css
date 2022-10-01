@@ -97,6 +97,12 @@ main {
   font-size: 4em;
 }
 
+#control-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 .button-wrapper {
   position: relative;
   text-align: center;
