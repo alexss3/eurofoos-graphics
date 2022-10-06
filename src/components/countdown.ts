@@ -24,4 +24,5 @@ ipcRenderer.on(eventMap.COUNTDOWN.SHOW, () => {
 
 ipcRenderer.on(eventMap.COUNTDOWN.HIDE, () => {
   countdown.innerText = '';
+  clearInterval(timer);
 });

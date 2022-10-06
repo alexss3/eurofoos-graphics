@@ -35,11 +35,11 @@ body {
   position: absolute;
   width: 400px;
   height: 200px;
-  top: 50%;
+  bottom: 25%;
   left: 50%;
-  margin-top: -100px;
   margin-left: -200px;
-  font-size: 72px;
+  font-size: 128px;
+  font-family: 'Montserrat', sans-serif;
   color: white;
   text-align: center;
 }
@@ -133,7 +133,15 @@ body {
 
 /* green - #3af79f
    purple - #384c7f
+
+   red - bb2127
+   gray - 2a2526
 */
+
+:root {
+  --red: #bb2127;
+  --gray: #2a2526;
+}
 
 #scoreboard {
   display: none;
@@ -157,8 +165,8 @@ body {
   width: 140px;
   height: 25px;
   padding: 12px 0 13px 0;
-  background: #3af79f;
-  color: #384c7f;
+  background: var(--red);
+  color: white;
   font-weight: 700;
   margin: 0;
 }
@@ -205,12 +213,12 @@ body {
 }
 
 .team-sets {
-  background-color: #3af79f;
-  color: black;
+  background-color: var(--red);
+  color: white;
 }
 
 .team-points {
-  background-color: #384c7f;
+  background-color: var(--gray);
   color: white;
 }
 

@@ -73,3 +73,11 @@ osc.on(ROOT_PATH + '/scoreboard/reset', () => {
 osc.on(ROOT_PATH + '/stinger/play', () => {
   ipcRenderer.send(eventMap.STINGER.PLAY);
 });
+
+osc.on(ROOT_PATH + '/countdown/show', () => {
+  document.getElementById('countdown-toggle').click();
+});
+
+osc.on(ROOT_PATH + '/countdown/hide', () => {
+  document.getElementById('countdown-toggle').click();
+});
