@@ -7,31 +7,30 @@ let streamStarted = false;
 const webcamContainer: HTMLVideoElement =
   document.querySelector('#webcam-container');
 
-const buildConstraints = (deviceId: string): any => {
+const buildConstraints = (deviceId: string): MediaStreamConstraints => {
   return {
     audio: Config.webcam.constraints.audio,
     video: {
       deviceId: deviceId,
-      width: {
-        min: Config.webcam.constraints.video.width,
-      },
-      height: {
-        min: Config.webcam.constraints.video.height,
-      },
+      width: Config.webcam.constraints.video.width,
+      height: Config.webcam.constraints.video.height,
     },
   };
 };
 
-const handleStream = (stream: any): void => {
+const handleStream = (stream: MediaStream): void => {
+  stream.getVideoTracks()[0].applyConstraints({
+    width: Config.webcam.constraints.video.width,
+    height: Config.webcam.constraints.video.height,
+  });
   webcamContainer.srcObject = stream;
   webcamContainer.style.display = 'block';
   webcamContainer.play();
   streamStarted = true;
 };
 
-const startStream = async (cons: any): Promise<any> => {
+const startStream = async (cons: MediaStreamConstraints): Promise<any> => {
   const stream = await navigator.mediaDevices.getUserMedia(cons);
-  console.log(stream.getTracks());
   handleStream(stream);
 };
 

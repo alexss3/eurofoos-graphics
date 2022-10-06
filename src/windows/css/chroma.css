@@ -1,3 +1,15 @@
+/* green - #3af79f
+   purple - #384c7f
+
+   red - bb2127
+   gray - 2a2526
+*/
+
+:root {
+  --red: #bb2127;
+  --gray: #2a2526;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -81,12 +93,12 @@ body {
 #commentators .commentator-name {
   width: 33vw;
   height: inherit;
-  background-color: #384c7f;
+  background-color: white;
   display: inline-block;
   position: absolute;
-  color: #3af79f;
+  color: var(--red);
   text-align: center;
-  border-left: 1vw #3af79f solid;
+  border-left: 1vw var(--gray) solid;
 }
 
 #commentator-title-one {
@@ -105,8 +117,9 @@ body {
 #commentators .commentator-name svg text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  color: #3af79f;
-  background-color: #3af79f;
+  color: var(--red);
+  background-color: var(--red);
+  fill: var(--red);
 }
 
 #image-overlay {
@@ -129,18 +142,6 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-}
-
-/* green - #3af79f
-   purple - #384c7f
-
-   red - bb2127
-   gray - 2a2526
-*/
-
-:root {
-  --red: #bb2127;
-  --gray: #2a2526;
 }
 
 #scoreboard {
