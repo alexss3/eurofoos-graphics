@@ -65,6 +65,12 @@ const eventMap = {
     UPDATED: 'countdown:updated',
     RESET: 'countdown:reset',
   },
+  RANKING: {
+    SHOW: 'ranking:show',
+    HIDE: 'ranking:hide',
+    UPDATED: 'ranking:updated',
+    RESET: 'ranking:reset',
+  },
 };
 
 export default eventMap;

@@ -384,3 +384,13 @@ ipcMain.on(Config.actions.TEAMS_UPDATE, (event, teamNames) => {
     chromaWindow.webContents.send(Config.events.TEAMS_UPDATED, teamNames);
   event.sender.send(Config.events.TEAMS_UPDATED, teamNames);
 });
+
+// Rankings
+ipcMain.on(eventMap.RANKING.UPDATED, (event, data) => {
+  // console.log('Rankings updated', data);
+  chromaWindow && chromaWindow.webContents.send(eventMap.RANKING.UPDATED, data);
+});
+
+ipcMain.on(eventMap.RANKING.HIDE, (event) => {
+  chromaWindow && chromaWindow.webContents.send(eventMap.RANKING.HIDE);
+});

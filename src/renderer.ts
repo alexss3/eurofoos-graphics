@@ -424,3 +424,30 @@ ipcRenderer.on(Config.events.TEAMS_UPDATED, (event, teamNames) => {
   redTeamName.value = teamNames.redTeam;
   blueTeamName.value = teamNames.blueTeam;
 });
+
+// RANKINGS
+
+const rankingsInput: any = document.getElementById('rankings-input');
+
+const rankingsToggleButton = document.getElementById('rankings-toggle');
+
+rankingsToggleButton.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const state = rankingsToggleButton.getAttribute('data-state');
+  if (state === 'off') {
+    const parsedRankings = rankingsInput.value.split('\n');
+    console.log('parsed rankings', parsedRankings);
+    ipcRenderer.send(eventMap.RANKING.UPDATED, parsedRankings);
+    rankingsToggleButton.setAttribute('data-state', 'on');
+    rankingsToggleButton.classList.remove('green');
+    rankingsToggleButton.classList.add('red');
+    rankingsToggleButton.classList.add('pulse');
+  } else {
+    ipcRenderer.send(eventMap.RANKING.HIDE);
+    rankingsToggleButton.setAttribute('data-state', 'off');
+    rankingsToggleButton.classList.remove('red');
+    rankingsToggleButton.classList.remove('pulse');
+    rankingsToggleButton.classList.add('green');
+  }
+});

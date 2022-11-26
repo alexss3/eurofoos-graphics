@@ -124,7 +124,16 @@
               </button>
               <span class="cp-button-caption">Scoreboard</span>
             </div>
-
+            <div class="button-wrapper">
+              <button
+                id="rankings-toggle"
+                class="btn waves-effect waves-dark green darken-1 z-depth-3"
+                data-state="off"
+              >
+                <i class="material-icons large">toc</i>
+              </button>
+              <span class="cp-button-caption">Rankings</span>
+            </div>
             <div class="button-wrapper">
               <button
                 id="stinger-toggle"
@@ -384,6 +393,24 @@
           </div>
         </div>
 
+        <!-- Rankings Settings Page -->
+        <div id="page-rankings" class="page">
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s10"><h3>Rankings Settings</h3></div>
+            <div class="col s1"></div>
+          </div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="col s1"></div>
+            <div class="col s5">
+              <textarea id="rankings-input"></textarea>
+              <button type="button" id="rankings-update" class="btn waves-effect waves-light">Update</button>
+            </div>
+            <div class="col s6"></div>
+          </div>
+        </div>
+
         <!-- Stinger Settings Page -->
         <div id="page-stinger" class="page">
           <div class="row">
@@ -437,6 +464,7 @@
             <li data-state="off" id="bottom-nav-overlay"><a href="#"><i class="material-icons small">insert_photo</i><span>Overlays</span></a></li>
             <li data-state="off" id="bottom-nav-webcam"><a href="#"><i class="material-icons small">videocam</i><span>Webcam</span></a></li>
             <li data-state="off" id="bottom-nav-scoreboard"><a href="#"><i class="material-icons small">iso</i><span>Scoreboard</span></a></li>
+            <li data-state="off" id="bottom-nav-rankings"><a href="#"><i class="material-icons small">toc</i><span>Rankings</span></a></li>
             <li data-state="off" id="bottom-nav-stinger"><a href="#"><i class="material-icons small">swap_horiz</i><span>Stinger</span></a></li>
           </ul>
         </div>

@@ -71,7 +71,7 @@ osc.on(ROOT_PATH + '/scoreboard/reset', () => {
 });
 
 osc.on(ROOT_PATH + '/stinger/play', () => {
-  ipcRenderer.send(eventMap.STINGER.PLAY);
+  document.getElementById('stinger-toggle').click();
 });
 
 osc.on(ROOT_PATH + '/countdown/show', () => {
@@ -80,4 +80,12 @@ osc.on(ROOT_PATH + '/countdown/show', () => {
 
 osc.on(ROOT_PATH + '/countdown/hide', () => {
   document.getElementById('countdown-toggle').click();
+});
+
+osc.on(ROOT_PATH + '/webcam/toggle', () => {
+  document.getElementById('webcam-toggle').click();
+});
+
+osc.on(ROOT_PATH + '/rankings/toggle', () => {
+  document.getElementById('rankings-toggle').click();
 });

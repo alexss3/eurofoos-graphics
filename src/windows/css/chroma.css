@@ -238,3 +238,37 @@ body {
 #blue-team-name {
   border-left: 10px solid #1565c0;
 }
+
+#rankings {
+  position: absolute;
+  top: 240px;
+  left: 485px;
+  width: 992px;
+  height: 668px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#rankings .line {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  padding: 1em 0;
+  padding-left: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 1.25rem;
+  color: white;
+}
+
+#rankings .line .rank {
+  width: 50px;
+  font-weight: bolder;
+}
+
+#rankings .line .name {
+  letter-spacing: 0.25rem;
+  font-weight: bold;
+}
